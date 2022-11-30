@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/jocelindarma.github.io/static/css/main.73e67857.css",
+    "main.js": "/jocelindarma.github.io/static/js/main.8325981b.js",
+    "static/js/787.a037ac99.chunk.js": "/jocelindarma.github.io/static/js/787.a037ac99.chunk.js",
+    "static/media/logo.png": "/jocelindarma.github.io/static/media/logo.5c665fa348a63ae2ee96.png",
+    "static/media/Jocelin Darma Resume.pdf": "/jocelindarma.github.io/static/media/Jocelin Darma Resume.9f4644fa55977f27ea9f.pdf",
+    "index.html": "/jocelindarma.github.io/index.html",
+    "main.73e67857.css.map": "/jocelindarma.github.io/static/css/main.73e67857.css.map",
+    "main.8325981b.js.map": "/jocelindarma.github.io/static/js/main.8325981b.js.map",
+    "787.a037ac99.chunk.js.map": "/jocelindarma.github.io/static/js/787.a037ac99.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.73e67857.css",
+    "static/js/main.8325981b.js"
+  ]
+}
