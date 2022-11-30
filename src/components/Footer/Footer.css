@@ -1,0 +1,13 @@
+.container-footer {
+  padding: 5rem 0;
+  color: var(--white-smoke-color);
+  text-align: center;
+}
+
+.white-text {
+  padding: 15px;
+}
+
+.copyright {
+  padding-top: 2rem;
+}
