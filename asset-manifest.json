@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.73e67857.css",
-    "main.js": "/static/js/main.2f8f1c4c.js",
+    "main.css": "/static/css/main.5c5c4945.css",
+    "main.js": "/static/js/main.9f3afb62.js",
     "static/js/787.a037ac99.chunk.js": "/static/js/787.a037ac99.chunk.js",
     "static/media/logo.png": "/static/media/logo.5c665fa348a63ae2ee96.png",
     "static/media/Jocelin Darma Resume.pdf": "/static/media/Jocelin Darma Resume.9f4644fa55977f27ea9f.pdf",
     "index.html": "/index.html",
-    "main.73e67857.css.map": "/static/css/main.73e67857.css.map",
-    "main.2f8f1c4c.js.map": "/static/js/main.2f8f1c4c.js.map",
+    "main.5c5c4945.css.map": "/static/css/main.5c5c4945.css.map",
+    "main.9f3afb62.js.map": "/static/js/main.9f3afb62.js.map",
     "787.a037ac99.chunk.js.map": "/static/js/787.a037ac99.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.73e67857.css",
-    "static/js/main.2f8f1c4c.js"
+    "static/css/main.5c5c4945.css",
+    "static/js/main.9f3afb62.js"
   ]
 }
