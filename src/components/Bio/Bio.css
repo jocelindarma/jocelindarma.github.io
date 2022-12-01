@@ -21,3 +21,16 @@
   border: 1px solid var(--purple-color) !important;
   border-radius: 10px !important;
 }
+
+.chevron {
+  padding-left: 0.5rem;
+}
+
+ul{
+  padding-top: 0.5rem;
+}
+
+li {
+  text-align: left;
+  list-style-type: circle;
+}

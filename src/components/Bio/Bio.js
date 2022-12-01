@@ -1,9 +1,17 @@
 // import ReactTooltip from "react-tooltip";
-// import { BioDetails } from "../BioDetails/BioDetails";
+import { HiOutlineChevronDown, HiOutlineChevronUp} from "react-icons/hi"
+import { BioDetails } from "../BioDetails/BioDetails";
 import { BIO } from "../../constants/bio";
+import { useState } from "react";
 import "./Bio.css";
 
 export const Bio = () => {
+  const [showDetails, setShowDetails] = useState(false);
+
+  const onClick = () => {
+    setShowDetails(!showDetails);
+  };
+
   return (
     <section className="container container-lines">
       <p className="purple-text">
@@ -13,17 +21,11 @@ export const Bio = () => {
       {BIO.map((e) => (
         <div key={e.year} className="lines-items">
           <span className="white-text">{e.year}: </span>
-          <span className="gray-text" data-tip="soo cuteeeee">
-            {e.title}
+          <span className="gray-text" data-tip="title">
+            {e.title}   
+            { showDetails? <HiOutlineChevronUp className="chevron" onClick={onClick}/> : <HiOutlineChevronDown className="chevron" onClick={onClick}/> }
+            { showDetails ? <BioDetails e={e} /> : null }
           </span>
-          {/* <ReactTooltip
-            getContent={(dataTip) => `This little buddy is ${dataTip}`}
-            place="top"
-            effects="float"
-            className="custom-theme"
-          >
-            <BioDetails bio = {e}/>{" "}
-          </ReactTooltip> */}
           <div className="line"></div>
         </div>
       ))}
