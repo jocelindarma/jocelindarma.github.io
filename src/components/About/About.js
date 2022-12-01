@@ -19,7 +19,7 @@ export const About = () => {
           me via <a href="mailto:jocelindarma13@gmail.com" target="_top">email </a> 
           or <a href="https://www.linkedin.com/in/jocelindarma/" target="_blank" rel="noreferrer">LinkedIn</a>! {" "}
         </p>
-        <span className="white-text">
+        <span>
           <a href={resume} target="_blank" rel="noreferrer">Download My Resume</a>
         </span>
       </div>
