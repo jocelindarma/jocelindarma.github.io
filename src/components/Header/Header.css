@@ -17,10 +17,3 @@
   -moz-background-clip: text;
   -moz-text-fill-color: transparent;
 }
-
-.header-title-box {
-  border-radius: 10px;
-  padding: 1.5rem 3rem;
-  background-color: var(--gray-color);
-  color: var(--white-color);
-}
