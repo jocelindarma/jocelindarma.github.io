@@ -3,11 +3,11 @@ export const BIO = [
     year: "July 2021 - November 2022",
     title: "Application Developer I at Starbucks Corporation",
     description:[
-      "Designed and developed microservices using React, Flask, MongoDB, and Docker \n",
-      "Wrote clear, concise and testable code and troubleshot/debugged REST APIs \n",
-      "Automated deployments via CI/CD pipelines (Drone, Ansible, Docker Swarm) \n",
-      "Created and maintained documentation supporting training, system administration, deployment, and operational processes and procedures \n",
-      "Engaged and collaborated in the Agile development environment (Scrum, Kanban) \n"
+      "Designed and developed microservices using React, Flask, MongoDB, and Docker",
+      "Wrote clear, concise and testable code and troubleshot/debugged REST APIs",
+      "Automated deployments via CI/CD pipelines (Drone, Ansible, Docker Swarm)",
+      "Created and maintained documentation supporting training, system administration, deployment, and operational processes and procedures",
+      "Engaged and collaborated in the Agile development environment (Scrum, Kanban)",
     ],
     skills: ["Python", "JavaScript", "TypeScript", "Flask", "Docker", "Drone", "Ansible", "MongoDB"],
   },
@@ -15,9 +15,9 @@ export const BIO = [
     year: "February 2021 - July 2021",
     title: "Data Analyst at MAQ Software",
     description:[
-      "Developed Power BI custom visuals that enables people to create data visualizations for clients or internal use \n",
-      "Wrote unit tests, ensuring 100% passed test cases with > 90% code coverage \n",
-      "Utilized Power BI to pull data from various databases and created variety of dashboards and reports to support business decision making for companies like Microsoft \n",
+      "Developed Power BI custom visuals that enables people to create data visualizations for clients or internal use",
+      "Wrote unit tests, ensuring 100% passed test cases with > 90% code coverage",
+      "Utilized Power BI to pull data from various databases and created variety of dashboards and reports to support business decision making for companies like Microsoft",
     ],
     skills:["Microsoft Power BI", "TypeScript"],
   },
@@ -46,8 +46,9 @@ export const BIO = [
     year: "October 2019 - June 2020",
     title: "Software Developer at Vrbo",
     description:[
-      "Built an Android mobile application in Java and Kotlin, that allows speech-to-speech translation between 40+ languages; this will serve as a proof-of-concept for future feature integration with the Vrbo app. \n",
-      "Project involves speech-to-text and text-to-speech conversion, natural language processing, cloud integration and building the mobile application itself."
+      "Senior Capstone Project, part of a 4 member team",
+      "Built an Android mobile application in Java and Kotlin that allows speech-to-speech translation between 40+ languages; this will serve as a proof-of-concept for future feature integration with the Vrbo app.",
+      "Project involves speech-to-text and text-to-speech conversion, natural language processing, cloud integration and building the mobile application itself.",
     ],
     skills:["Java", "Kotlin", "Android Studio", "AWS Lambda", "AWS SAM"],
   },
@@ -55,10 +56,21 @@ export const BIO = [
     year: "July 2019 - September 2019",
     title: "Software Developer Intern at AiChat",
     description:[
-      "Implemented features and improved web-based content management system using React and Redux \n",
-      "Collaborated with back-end developers to integrate UI elements with server-side logic and learned data storage integration using Redis"
+      "Implemented front-end features and improved their web-based content management system using React and Redux",
+      "Collaborated with back-end developers to integrate UI elements with server-side logic and learned data storage integration using Redis",
+      "Restructured front-end codebase to improve readability and maintainability",
+      "Followed Agile (Scrum) methodology to deploy continuous versions of the application while maintaining quality of the product",
     ],
     skills:["React", "Redux"],
+  },
+  {
+    year: "September 2017 - June 2019",
+    title: "Junior Web Developer at Permias Nasional",
+    description:[
+      "Created and maintained the organization's website using HTML, CSS and JS",
+      "Collaborated with senior developers and UI/UX designers for feedback during the design process",
+    ],
+    skills:["JavaScript"],
   },
   {
     year: "September 2018",
@@ -70,7 +82,7 @@ export const BIO = [
     year: "January 2017 - August 2018",
     title: "Student at North Seattle College",
     description:[
-      "Graduated with an Associates degree in Computer Science \n",
+      "Graduated with an Associates degree in Computer Science",
       "Member of Phi Theta Kappa, Computer Science Club and Rocket Club",
     ],
     skills:[],
