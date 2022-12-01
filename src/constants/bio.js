@@ -15,9 +15,9 @@ export const BIO = [
     year: "February 2021 - July 2021",
     title: "Data Analyst at MAQ Software",
     description:[
-      "Developed Power BI custom visuals that enables people to create data visualizations for clients or internal use",
-      "Wrote unit tests, ensuring 100% passed test cases with > 90% code coverage",
-      "Utilized Power BI to pull data from various databases and created variety of dashboards and reports to support business decision making for companies like Microsoft",
+      "Developed Power BI Custom Visuals that enables people to create beautiful data visualizations for clients and/or internal use",
+      "Wrote unit tests, ensuring 100% passed test cases with >90% code coverage using Jasmine",
+      "Utilized Power BI to pull data from various databases and created dashboards and reports to support business decision making for companies like Microsoft",
     ],
     skills:["Microsoft Power BI", "TypeScript"],
   },
@@ -44,7 +44,7 @@ export const BIO = [
   },
   {
     year: "October 2019 - June 2020",
-    title: "Software Developer at Vrbo",
+    title: "Student Software Developer at Vrbo",
     description:[
       "Senior Capstone Project, part of a 4 member team",
       "Built an Android mobile application in Java and Kotlin that allows speech-to-speech translation between 40+ languages; this will serve as a proof-of-concept for future feature integration with the Vrbo app.",
@@ -67,7 +67,7 @@ export const BIO = [
     year: "September 2017 - June 2019",
     title: "Junior Web Developer at Permias Nasional",
     description:[
-      "Created and maintained the organization's website using HTML, CSS and JS",
+      "Handled the overall development and maintenance of the organization's website",
       "Collaborated with senior developers and UI/UX designers for feedback during the design process",
     ],
     skills:["JavaScript"],
