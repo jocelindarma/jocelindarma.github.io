@@ -22,7 +22,7 @@ export const ImageCarousel = () => {
 	useEffect(() => {
 		const intervalId = setInterval(() => {
 			setCurrentImage(images[Math.floor(Math.random() * images.length)]);
-		}, 3000)
+		}, 5000)
 		
 		return () => clearInterval(intervalId);
 	}, [])
