@@ -1,15 +1,16 @@
-// import ReactTooltip from "react-tooltip";
-import { HiOutlineChevronDown, HiOutlineChevronUp} from "react-icons/hi"
-import { BioDetails } from "../BioDetails/BioDetails";
+import { BioItem } from "../BioItem/BioItem";
 import { BIO } from "../../constants/bio";
 import { useState } from "react";
 import "./Bio.css";
 
 export const Bio = () => {
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, setshowDetails] = useState("0");
 
-  const onClick = () => {
-    setShowDetails(!showDetails);
+  const handleToggle = (index) => {
+    if (showDetails === index) {
+      return setshowDetails("0");
+    }
+    setshowDetails(index);
   };
 
   return (
@@ -18,16 +19,13 @@ export const Bio = () => {
         My Journey 
       </p>
       <div className="line"></div>
-      {BIO.map((e) => (
-        <div key={e.year} className="lines-items">
-          <span className="white-text">{e.year}: </span>
-          <span className="gray-text" data-tip="title">
-            {e.title}   
-            { showDetails? <HiOutlineChevronUp className="chevron" onClick={onClick}/> : <HiOutlineChevronDown className="chevron" onClick={onClick}/> }
-            { showDetails ? <BioDetails e={e} /> : null }
-          </span>
-          <div className="line"></div>
-        </div>
+      {BIO.map((bio, index) => (
+        <BioItem 
+          onToggle={() => handleToggle(index)}
+          active={showDetails === index}
+          key={index}
+          bio={bio}
+        />
       ))}
     </section>
   );

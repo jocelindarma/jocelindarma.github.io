@@ -1,11 +1,12 @@
 import "./BioDetails.css";
 
-export const BioDetails = ({ e }) => {
+export const BioDetails = ({ bio, active }) => {
   return (
-      e.description.map((description) => (
+      bio.description.map((description) => (
+        active ?
         <ul>
           <li className="gray-text">{description}</li>
-        </ul>
+        </ul> : null
       ))
   );
 };
