@@ -1,12 +1,12 @@
 import "./BioDetails.css";
-import { FaCarrot } from "react-icons/fa";
+import { IoIosSnow } from "react-icons/io";
 
 export const BioDetails = ({ bio, active }) => {
   return (
       bio.description.map((description) => (
         active ?
         <ul>
-          <li className="gray-text"><FaCarrot/>{" "}{description}</li>
+          <li className="gray-text"><IoIosSnow/>{" "}{description}</li>
         </ul> : null
       ))
   );
