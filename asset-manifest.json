@@ -1,23 +1,26 @@
 {
   "files": {
     "main.css": "/static/css/main.4d5077b4.css",
-    "main.js": "/static/js/main.29b4d486.js",
+    "main.js": "/static/js/main.983a424e.js",
     "static/js/787.a037ac99.chunk.js": "/static/js/787.a037ac99.chunk.js",
+    "static/media/memoji10.png": "/static/media/memoji10.09950351cc0d551cab6a.png",
     "static/media/memoji5.png": "/static/media/memoji5.e55d92a9880f0b178541.png",
+    "static/media/memoji8.png": "/static/media/memoji8.52ade2f4898eaf625990.png",
     "static/media/memoji7.png": "/static/media/memoji7.6666bf6095a20799318b.png",
+    "static/media/memoji4.png": "/static/media/memoji4.7c77b9074f611de7cfc1.png",
+    "static/media/memoji9.png": "/static/media/memoji9.99e8fb5288b15f27df52.png",
     "static/media/memoji6.png": "/static/media/memoji6.342c4ab0a5c33df4f81f.png",
     "static/media/memoji1.png": "/static/media/memoji1.05c7cf8e80934e2a93b8.png",
-    "static/media/memoji3.png": "/static/media/memoji3.05c7cf8e80934e2a93b8.png",
+    "static/media/memoji3.png": "/static/media/memoji3.c7ec7fb94a6e2207c5d8.png",
     "static/media/memoji2.png": "/static/media/memoji2.d93061e8c022ea9b2799.png",
-    "static/media/memoji4.png": "/static/media/memoji4.d93061e8c022ea9b2799.png",
     "static/media/Jocelin Darma Resume.pdf": "/static/media/Jocelin Darma Resume.a31c02838faffc02987d.pdf",
     "index.html": "/index.html",
     "main.4d5077b4.css.map": "/static/css/main.4d5077b4.css.map",
-    "main.29b4d486.js.map": "/static/js/main.29b4d486.js.map",
+    "main.983a424e.js.map": "/static/js/main.983a424e.js.map",
     "787.a037ac99.chunk.js.map": "/static/js/787.a037ac99.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.4d5077b4.css",
-    "static/js/main.29b4d486.js"
+    "static/js/main.983a424e.js"
   ]
 }
