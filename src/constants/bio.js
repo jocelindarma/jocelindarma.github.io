@@ -22,12 +22,12 @@ export const BIO = [
     skills:["Microsoft Power BI", "TypeScript"],
   },
   {
-    year: "December 2020",
-    title: "Graduated from Seattle University",
+    year: "September 2018 - December 2020",
+    title: "Student at Seattle University",
     description:[
-      "Graduated with a BS in Computer Science",
+      "Graduated with a Bachelors degree in Computer Science",
       "Head of Graphic Design for Indonesian Student Association of Seattle University (ISASU)",
-      "Member of Computer Science and Cybersecurity Club",
+      "Member of Computer Science Club and Cybersecurity Club",
     ],
     skills:[],
   },
@@ -71,12 +71,6 @@ export const BIO = [
       "Collaborated with senior developers and UI/UX designers for feedback during the design process",
     ],
     skills:["JavaScript"],
-  },
-  {
-    year: "September 2018",
-    title: "Student at Seattle University",
-    description:[],
-    skills:[],
   },
   {
     year: "January 2017 - August 2018",
