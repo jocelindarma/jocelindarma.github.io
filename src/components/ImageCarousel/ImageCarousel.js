@@ -5,20 +5,24 @@ import image4 from "../../images/memoji4.png";
 import image5 from "../../images/memoji5.png";
 import image6 from "../../images/memoji6.png";
 import image7 from "../../images/memoji7.png";
+import image8 from "../../images/memoji8.png";
+import image9 from "../../images/memoji9.png";
+import image10 from "../../images/memoji10.png";
+
 import Snowfall from "react-snowfall";
 import ReactTooltip from "react-tooltip";
 import { useState, useEffect } from "react";
 
-const images = [image1, image2, image3, image4, image5, image6, image7];
+const images = [image1, image2, image3, image4, image5, image6, image7, image8, image9, image10];
 
 export const ImageCarousel = () => {
-	const [currentImage, setCurrentImage] = useState(null);
+	const [currentImage, setCurrentImage] = useState(image4);
 	const [snow, setSnow] = useState(false);
 
 	useEffect(() => {
 		const intervalId = setInterval(() => {
 			setCurrentImage(images[Math.floor(Math.random() * images.length)]);
-		}, 5000)
+		}, 3000)
 		
 		return () => clearInterval(intervalId);
 	}, [])
