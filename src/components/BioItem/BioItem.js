@@ -9,12 +9,12 @@ export const BioItem = ({ bio, active, onToggle}) => {
 				<span className="white-text">{bio.year}:</span>
 				<span className="gray-text" data-tip="title">
 						{bio.title}   
-						{active ? <HiOutlineChevronUp className="chevron"/> : <HiOutlineChevronDown className="chevron"/>}
+						{bio.year !== "September 2018" ? active ? <HiOutlineChevronUp className="chevron"/> : <HiOutlineChevronDown className="chevron"/> : null}
 				</span>
 			</div>
 			<div
 				style={
-					active ? { height: document.clientHeight }:{ height: "0px" }
+					active ? { height: document.clientHeight, paddingTop: "0.5rem" }:{ height: "0px" }
 				}
 			>
 			<div className="details">

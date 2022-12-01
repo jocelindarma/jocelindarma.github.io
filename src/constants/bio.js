@@ -17,7 +17,7 @@ export const BIO = [
     description:[
       "Developed Power BI custom visuals that enables people to create data visualizations for clients or internal use \n",
       "Wrote unit tests, ensuring 100% passed test cases with > 90% code coverage \n",
-      "Utilized Power BI to pull data from various databases and created variety of dashboards and reports to support business decision making for customers \n",
+      "Utilized Power BI to pull data from various databases and created variety of dashboards and reports to support business decision making for companies like Microsoft \n",
     ],
     skills:["Microsoft Power BI", "TypeScript"],
   },
