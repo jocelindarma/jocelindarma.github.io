@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.4d5077b4.css",
-    "main.js": "/static/js/main.76e48553.js",
+    "main.css": "/static/css/main.8e2f8379.css",
+    "main.js": "/static/js/main.07669b22.js",
     "static/js/787.a037ac99.chunk.js": "/static/js/787.a037ac99.chunk.js",
     "static/media/memoji10.png": "/static/media/memoji10.09950351cc0d551cab6a.png",
     "static/media/memoji5.png": "/static/media/memoji5.e55d92a9880f0b178541.png",
@@ -15,12 +15,12 @@
     "static/media/memoji2.png": "/static/media/memoji2.d93061e8c022ea9b2799.png",
     "static/media/Jocelin Darma Resume.pdf": "/static/media/Jocelin Darma Resume.a31c02838faffc02987d.pdf",
     "index.html": "/index.html",
-    "main.4d5077b4.css.map": "/static/css/main.4d5077b4.css.map",
-    "main.76e48553.js.map": "/static/js/main.76e48553.js.map",
+    "main.8e2f8379.css.map": "/static/css/main.8e2f8379.css.map",
+    "main.07669b22.js.map": "/static/js/main.07669b22.js.map",
     "787.a037ac99.chunk.js.map": "/static/js/787.a037ac99.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.4d5077b4.css",
-    "static/js/main.76e48553.js"
+    "static/css/main.8e2f8379.css",
+    "static/js/main.07669b22.js"
   ]
 }
