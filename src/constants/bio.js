@@ -3,9 +3,9 @@ export const BIO = [
     year: "July 2021 - November 2022",
     title: "Application Developer I at Starbucks Corporation",
     description:[
-      "Designed and developed microservices using React, Flask, MongoDB, and Docker",
+      "Designed and developed microservices using Flask, MongoDB, and Docker",
       "Wrote clear, concise and testable code and troubleshot/debugged REST APIs",
-      "Automated deployments via CI/CD pipelines (Drone, Ansible, Docker Swarm)",
+      "Automated deployments via CI/CD pipelines using Drone, Ansible, Docker Compose",
       "Created and maintained documentation supporting training, system administration, deployment, and operational processes and procedures",
       "Engaged and collaborated in the Agile development environment (Scrum, Kanban)",
     ],
@@ -17,7 +17,7 @@ export const BIO = [
     description:[
       "Developed Power BI Custom Visuals that enables people to create beautiful data visualizations for clients and/or internal use",
       "Wrote unit tests, ensuring 100% passed test cases with >90% code coverage using Jasmine",
-      "Utilized Power BI to pull data from various databases and created dashboards and reports to support business decision making for companies like Microsoft",
+      "Utilized Power BI to pull data from various databases and created interactive dashboards and reports to support business decision making for companies like Microsoft",
     ],
     skills:["Microsoft Power BI", "TypeScript"],
   },
