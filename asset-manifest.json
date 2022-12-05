@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.8e2f8379.css",
-    "main.js": "/static/js/main.bbe9d5eb.js",
+    "main.js": "/static/js/main.b00e95e2.js",
     "static/js/787.a037ac99.chunk.js": "/static/js/787.a037ac99.chunk.js",
     "static/media/memoji10.png": "/static/media/memoji10.09950351cc0d551cab6a.png",
     "static/media/memoji5.png": "/static/media/memoji5.e55d92a9880f0b178541.png",
@@ -13,14 +13,14 @@
     "static/media/memoji1.png": "/static/media/memoji1.05c7cf8e80934e2a93b8.png",
     "static/media/memoji3.png": "/static/media/memoji3.c7ec7fb94a6e2207c5d8.png",
     "static/media/memoji2.png": "/static/media/memoji2.d93061e8c022ea9b2799.png",
-    "static/media/Jocelin Darma Resume.pdf": "/static/media/Jocelin Darma Resume.d8c1394f3ad958909a90.pdf",
+    "static/media/Jocelin Darma Resume.pdf": "/static/media/Jocelin Darma Resume.93c48c8e49297890089e.pdf",
     "index.html": "/index.html",
     "main.8e2f8379.css.map": "/static/css/main.8e2f8379.css.map",
-    "main.bbe9d5eb.js.map": "/static/js/main.bbe9d5eb.js.map",
+    "main.b00e95e2.js.map": "/static/js/main.b00e95e2.js.map",
     "787.a037ac99.chunk.js.map": "/static/js/787.a037ac99.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.8e2f8379.css",
-    "static/js/main.bbe9d5eb.js"
+    "static/js/main.b00e95e2.js"
   ]
 }
