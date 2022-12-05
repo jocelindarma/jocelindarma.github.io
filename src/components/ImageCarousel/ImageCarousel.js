@@ -12,6 +12,7 @@ import image10 from "../../images/memoji10.png";
 import Snowfall from "react-snowfall";
 import ReactTooltip from "react-tooltip";
 import { useState, useEffect } from "react";
+import "./ImageCarousel.css"
 
 const images = [image1, image2, image3, image4, image5, image6, image7, image8, image9, image10];
 

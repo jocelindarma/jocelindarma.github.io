@@ -13,13 +13,6 @@
   max-width: auto;
 }
 
-.icon img {
-  width: 100%;
-  max-width: 200px;
-  margin: 2.5rem 2.5rem;
-  height: auto;
-}
-
 .resume {
   margin-left: auto;
   margin-right: auto;
@@ -36,12 +29,6 @@
 
   .about-container {
     display: block;
-  }
-
-  .icon img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto 
   }
 }
 
