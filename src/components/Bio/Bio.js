@@ -14,13 +14,11 @@ export const Bio = () => {
   };
 
   return (
-    <section className="container container-lines">
-      <p className="purple-text">
-        My Journey 
-      </p>
+    <section className="container bio-container">
+      <p className="purple-text"> My Journey </p>
       <div className="line"></div>
       {BIO.map((bio, index) => (
-        <BioItem 
+        <BioItem
           onToggle={() => handleToggle(index)}
           active={showDetails === index}
           key={index}

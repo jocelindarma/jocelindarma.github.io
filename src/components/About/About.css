@@ -1,4 +1,4 @@
-.container-about {
+.about-container {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -34,7 +34,7 @@
     max-width: 100%;
   }
 
-  .container-about {
+  .about-container {
     display: block;
   }
 

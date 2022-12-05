@@ -23,19 +23,19 @@ export const ImageCarousel = () => {
 		const intervalId = setInterval(() => {
 			setCurrentImage(images[Math.floor(Math.random() * images.length)]);
 		}, 5000)
-		
+
 		return () => clearInterval(intervalId);
 	}, [])
 
 	return (
 		<div className="icon">
-			<img src={currentImage} alt="" data-tip data-for="imageToolTip" onClick={() => setSnow(!snow)}/>
-      <ReactTooltip id="imageToolTip" place="right" effect="solid">
-        Boop my nose for a surprise!
-      </ReactTooltip>
-			{snow ? 
+			<img src={currentImage} alt="" data-tip data-for="imageToolTip" onClick={() => setSnow(!snow)} />
+			<ReactTooltip id="imageToolTip" place="right" effect="solid">
+				Boop my nose for a surprise!
+			</ReactTooltip>
+			{snow ?
 				<Snowfall
-					style={{position: 'fixed'}}
+					style={{ position: 'fixed' }}
 				/> : null
 			}
 		</div>

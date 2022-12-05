@@ -1,18 +1,7 @@
-  .line {
-    width: 4px;
-    margin: 10px auto;
-    height: 100px;
-    border-radius: 60px;
-    background: linear-gradient(180deg, rgba(36, 44, 55, 0) 0%, #575d66 100%);
-  }
-  
-  .text-bio {
+  .bio-title{
     cursor: pointer;
-    transition: transform 250ms;
-    transition: 2s;
   }
 
   .chevron {
     padding-left: 0.5rem;
   }
-  

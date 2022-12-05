@@ -1,4 +1,4 @@
-.container-lines {
+.bio-container {
   text-align: center;
 }
 
@@ -9,28 +9,4 @@
   border-radius: 60px;
   background: linear-gradient(180deg, rgba(36, 44, 55, 0) 0%, #575d66 100%);
 }
-
-.text-bio {
-  cursor: pointer;
-  transition: transform 250ms;
-  transition: 2s;
-}
-
-.custom-theme {
-  background: #161b22 !important;
-  border: 1px solid var(--purple-color) !important;
-  border-radius: 10px !important;
-}
-
-.chevron {
-  padding-left: 0.5rem;
-}
-
-ul{
-  padding-top: 0.5rem;
-}
-
-li {
-  text-align: left;
-  list-style-type: circle;
-}
+ 
