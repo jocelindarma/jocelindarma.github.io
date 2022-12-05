@@ -6,7 +6,7 @@ export const BioItem = ({ bio, active, onToggle }) => {
 	return (
 		<div className="bio-item">
 			<div className="bio-title" onClick={onToggle}>
-				<span className="white-text">{bio.year}:</span>
+				<span className="white-text">{bio.year}: </span>
 				<span className="gray-text">
 					{bio.title}
 					{active ? <HiOutlineChevronUp className="chevron" /> : <HiOutlineChevronDown className="chevron" />}
