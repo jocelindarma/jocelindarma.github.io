@@ -5,9 +5,9 @@ export const BIO = [
     description:[
       "Designed and developed microservices using Flask, MongoDB, and Docker",
       "Wrote clear, concise and testable code and troubleshot/debugged REST APIs",
-      "Automated deployments via CI/CD pipelines using Drone, Ansible, Docker Compose",
+      "Automated deployments via CI/CD pipelines using Drone and Ansible",
       "Created and maintained documentation supporting training, system administration, deployment, and operational processes and procedures",
-      "Engaged and collaborated in the Agile development environment (Scrum, Kanban)",
+      "Engaged and collaborated in an Agile development environment (Scrum, Kanban)",
     ],
     skills: ["Python", "JavaScript", "TypeScript", "Flask", "Docker", "Drone", "Ansible", "MongoDB"],
   },
@@ -15,7 +15,7 @@ export const BIO = [
     year: "February 2021 - July 2021",
     title: "Data Analyst at MAQ Software",
     description:[
-      "Developed Power BI Custom Visuals that enables people to create beautiful data visualizations for clients and/or internal use",
+      "Developed Power BI Custom Visuals for clients and/or internal use that enables users to create beautiful data visualizations",
       "Wrote unit tests, ensuring 100% passed test cases with >90% code coverage using Jasmine",
       "Utilized Power BI to pull data from various databases and created interactive dashboards and reports to support business decision making for companies like Microsoft",
     ],
