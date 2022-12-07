@@ -32,7 +32,7 @@ export const ImageCarousel = () => {
 		<div className="icon">
 			<img src={currentImage} alt="" data-tip data-for="imageToolTip" onClick={() => setSnow(!snow)} />
 			<ReactTooltip id="imageToolTip" place="right" effect="solid">
-				Boop my nose for a surprise!
+				{snow ? "Boop again to stop the snow" : "Boop my nose for a surprise!"}
 			</ReactTooltip>
 			{snow ?
 				<Snowfall
