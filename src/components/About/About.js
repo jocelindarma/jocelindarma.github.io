@@ -1,6 +1,6 @@
 import "./About.css";
 import { ImageCarousel } from "../ImageCarousel/ImageCarousel";
-import resume from "../../assets/Jocelin Darma Resume.pdf";
+import resume from "../../assets/Jocelin_Darma_Resume.pdf";
 
 export const About = () => {
   return (
