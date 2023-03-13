@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.857b1e46.css",
-    "main.js": "/static/js/main.1a6961a7.js",
+    "main.css": "/static/css/main.03ebe41d.css",
+    "main.js": "/static/js/main.5dc0e42b.js",
     "static/js/787.a037ac99.chunk.js": "/static/js/787.a037ac99.chunk.js",
     "static/media/memoji10.png": "/static/media/memoji10.09950351cc0d551cab6a.png",
     "static/media/memoji5.png": "/static/media/memoji5.e55d92a9880f0b178541.png",
@@ -12,15 +12,15 @@
     "static/media/memoji6.png": "/static/media/memoji6.342c4ab0a5c33df4f81f.png",
     "static/media/memoji1.png": "/static/media/memoji1.05c7cf8e80934e2a93b8.png",
     "static/media/memoji3.png": "/static/media/memoji3.c7ec7fb94a6e2207c5d8.png",
+    "static/media/Jocelin_Darma_Resume.pdf": "/static/media/Jocelin_Darma_Resume.431ff016866bededbce0.pdf",
     "static/media/memoji2.png": "/static/media/memoji2.d93061e8c022ea9b2799.png",
-    "static/media/Jocelin Darma Resume.pdf": "/static/media/Jocelin Darma Resume.564fccf1f0dd80c44b3d.pdf",
     "index.html": "/index.html",
-    "main.857b1e46.css.map": "/static/css/main.857b1e46.css.map",
-    "main.1a6961a7.js.map": "/static/js/main.1a6961a7.js.map",
+    "main.03ebe41d.css.map": "/static/css/main.03ebe41d.css.map",
+    "main.5dc0e42b.js.map": "/static/js/main.5dc0e42b.js.map",
     "787.a037ac99.chunk.js.map": "/static/js/787.a037ac99.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.857b1e46.css",
-    "static/js/main.1a6961a7.js"
+    "static/css/main.03ebe41d.css",
+    "static/js/main.5dc0e42b.js"
   ]
 }
