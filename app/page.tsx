@@ -302,7 +302,7 @@ export default function Home() {
                   </AccordionTrigger>
                   <AccordionContent>
                     <p className="text-sm text-gray-700 mt-4">
-                      Handled the overall development and maintenance of the organization's website
+                      Handled the overall development and maintenance of the organization&apos;s website
                       <br />
                       <a href="https://permiasnasional.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://permiasnasional.com/</a>
                     </p>
