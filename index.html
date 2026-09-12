@@ -71,6 +71,16 @@
     [data-r="work-cards"] { position: static !important; grid-template-columns: minmax(0, 1fr) !important; gap: 22px !important; }
     [data-r="book-card"] { width: 100%; max-width: 320px; justify-self: center; transform: none !important; margin-top: 0 !important; }
   }
+  @media (max-width: 760px) {
+    [data-r="case-main"] { padding: 28px 20px 0 !important; }
+    [data-r="case-h2"] { font-size: 32px !important; }
+    [data-r="case-sec"] { grid-template-columns: minmax(0, 1fr) !important; gap: 10px !important; }
+    [data-r="case-sec"] h3 { font-size: 21px !important; }
+    [data-r="case-hero"] > img { height: 250px !important; }
+    [data-r="case-live"] { height: 460px !important; }
+    [data-r="book-card"] { max-width: 280px !important; }
+    [data-r="book-card"] > div { left: 15% !important; right: 15% !important; }
+  }
   @media (max-width: 680px) {
     [data-r="header"] { height: 72px !important; }
     [data-r="lead"] { width: 16px !important; }
@@ -244,7 +254,7 @@
 
           <div ref="{{ deskRef }}" data-r="desk-card" style="position: relative; container-type: size; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); color: var(--fg); background: var(--card); border: 1.5px solid var(--ink); border-radius: 12px; height: clamp(340px, calc(100vh - 470px), 460px); overflow: hidden; animation: jd-in 0.5s 0.08s ease both;">
             <div data-desk-fit="" style="position: absolute; left: 50%; top: 54%; width: calc(min(100cqw, 182.5cqh) * 1.1); aspect-ratio: 1694 / 928; transform: translate(-50%, -50%);">
-              <img src="./art/home-desk.png" alt="Jocelin's desk: three monitors, a sleeping dog, plants and sticky notes" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block;">
+              <img src="./art/home-desk.jpg" alt="Jocelin's desk: three monitors, a sleeping dog, plants and sticky notes" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block;">
               <div style="position: absolute; left: 44.4%; top: 38.8%; width: 17.4%; height: 16.0%; clip-path: polygon(0 0, 100% 0, 100% 100%, 79.7% 100.0%, 79.1% 86.0%, 63.9% 86.0%, 63.2% 100.0%, 61.8% 100.0%, 59.8% 87.3%, 57.1% 75.3%, 53.7% 67.3%, 50.3% 62.0%, 46.3% 58.7%, 40.9% 58.0%, 36.1% 59.3%, 31.8% 62.7%, 28.0% 68.0%, 25.3% 77.3%, 23.3% 94.0%, 22.6% 100.0%, 0 100%); --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); color: var(--on-ink); background: #1e2d52; border-radius: 3px; overflow: hidden; pointer-events: none; display: grid; grid-template-columns: 20.5% 1fr;">
                 <div style="border-right: 1px solid oklch(1 0 0 / 0.35); padding: 8% 14%; display: flex; flex-direction: column; gap: 9%;">
                   <sc-for list="{{ sideLines }}" as="s" hint-placeholder-count="7"><div style="display: flex; gap: 10%; align-items: center;"><div style="width: 22%; aspect-ratio: 1; border: 1px solid oklch(1 0 0 / 0.7); border-radius: 1px; flex: none;"></div><div style="height: 1.5px; width: {{ s }}%; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: #ffffff; opacity: 0.8; border-radius: 999px;"></div></div></sc-for>
@@ -276,8 +286,8 @@
         <div data-r="strip" style="position: relative; margin-top: 20px; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); color: var(--fg); background: var(--card); border: 1.5px solid var(--ink); border-radius: 12px; height: 300px; overflow: hidden; animation: jd-in 0.5s 0.16s ease both;">
           <div data-r="strip-inner" style="position: absolute; left: 0; right: 0; bottom: 60px; height: 190px; overflow: hidden;">
             <div style="display: flex; width: max-content; height: 100%; animation: jd-walk 40s linear infinite;">
-              <img src="./art/skyline-wide.png" alt="" style="height: 100%; width: auto; display: block; flex: none;">
-              <img src="./art/skyline-wide.png" alt="" style="height: 100%; width: auto; display: block; flex: none;">
+              <img src="./art/skyline-wide.jpg" alt="" style="height: 100%; width: auto; display: block; flex: none;">
+              <img src="./art/skyline-wide.jpg" alt="" style="height: 100%; width: auto; display: block; flex: none;">
             </div>
           </div>
           <div data-r="walker" style="position: absolute; left: 50%; bottom: 26px; width: 70px; aspect-ratio: 285 / 510; transform: translateX(-50%); background-image: url('./art/walker-sheet.png'); background-size: 600% 100%; background-repeat: no-repeat; animation: jd-sprite 0.78s steps(6, jump-none) infinite; pointer-events: none; z-index: 3"></div>
@@ -348,21 +358,21 @@
             </div>
           </div>
         </div>
-        <img data-r="about-street" src="./art/about-street.png" alt="Line-art street scene: a girl walking her poodle past a cafe and bakery, city skyline across the water" style="width: calc(100% + 80px); max-width: none; height: auto; display: block; margin: 48px -40px -32px; pointer-events: none;">
+        <img data-r="about-street" src="./art/about-street.jpg" alt="Line-art street scene: a girl walking her poodle past a cafe and bakery, city skyline across the water" style="width: calc(100% + 80px); max-width: none; height: auto; display: block; margin: 48px -40px -32px; pointer-events: none;">
       </section>
       
       </sc-if>
 
       <sc-if value="{{ isCase }}" hint-placeholder-val="{{ false }}">
-      <main style="padding: 48px 40px 0;">
+      <main data-r="case-main" style="padding: 48px 40px 0;">
         <div style="max-width: 900px; margin: 0 auto;">
           <button onClick="{{ goWork }}" style="background: none; border: 0; padding: 0; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 12.5px; letter-spacing: 0.14em; color: var(--fg-3);" style-hover="color: var(--accent-text);">← BACK TO WORK</button>
           <div style="margin-top: 34px; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.18em; color: var(--accent-text);">{{ caseKicker }}</div>
-          <h2 style="margin: 14px 0 0; font-weight: 800; font-size: 52px; line-height: 1.08; text-wrap: balance;">{{ caseTitle }}</h2>
+          <h2 data-r="case-h2" style="margin: 14px 0 0; font-weight: 800; font-size: 52px; line-height: 1.08; text-wrap: balance;">{{ caseTitle }}</h2>
           <p style="margin: 22px 0 0; font-family: 'DM Mono', monospace; font-size: 15px; line-height: 1.75; max-width: 64ch; color: var(--fg-2); white-space: pre-line; text-wrap: pretty;">{{ caseLede }}</p>
 
           <sc-if value="{{ hasHero }}" hint-placeholder-val="{{ true }}">
-          <div style="margin-top: 28px;">
+          <div data-r="case-hero" style="margin-top: 28px;">
             <img src="{{ caseSlotSrc }}" alt="{{ caseSlotHint }}" style="display: block; width: 100%; height: 440px; object-fit: contain;" /></div>
           </sc-if>
 
@@ -372,7 +382,7 @@
               <span>LIVE PREVIEW</span>
               <a href="{{ caseLive }}" target="_blank" rel="noopener noreferrer" style="letter-spacing: 0.16em;">OPEN IN A NEW TAB ↗</a>
             </div>
-            <div style="margin-top: 12px; height: 620px; border: 1.5px solid var(--ink); border-radius: 12px; overflow: hidden; background: var(--card);">
+            <div data-r="case-live" style="margin-top: 12px; height: 620px; border: 1.5px solid var(--ink); border-radius: 12px; overflow: hidden; background: var(--card);">
               <iframe src="{{ caseLive }}" title="Angy Bunny, live" loading="lazy" style="display: block; width: 100%; height: 100%; border: 0;"></iframe>
             </div>
           </div>
@@ -386,7 +396,7 @@
           <div style="margin-top: 52px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.16em; color: var(--fg-3);">{{ caseSectionsLabel }}</div>
           <div style="margin-top: 26px; display: flex; flex-direction: column; gap: 40px;">
             <sc-for list="{{ caseSections }}" as="sec" hint-placeholder-count="3">
-              <div style="display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; align-items: start;">
+              <div data-r="case-sec" style="display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; align-items: start;">
                 <h3 style="margin: 0; font-weight: 800; font-size: 24px; line-height: 1.25;">{{ sec.h }}</h3>
                 <p style="margin: 0; font-family: 'DM Mono', monospace; font-size: 14.5px; line-height: 1.8; color: var(--fg-2); white-space: pre-line; text-wrap: pretty;">{{ sec.p }}</p>
               </div>
