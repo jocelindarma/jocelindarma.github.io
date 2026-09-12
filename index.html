@@ -680,11 +680,36 @@ class Component extends DCLogic {
     svg.onmouseleave = () => { paused = false; if (this.state.hoverName) this.setState({ hoverName: "" }); };
     svg.onmousemove = (e) => { const f = hit(e); const n = f ? f.properties.name : ""; if (n !== this.state.hoverName) this.setState({ hoverName: n }); };
     svg.onclick = (e) => {
+      if (svg.__noClick) return;
       const f = hit(e); if (!f) return;
       this.boink("pin");
       const n = f.properties.name;
       this.setState(s => { const yours = s.yours.includes(n) ? s.yours.filter(x => x !== n) : [...s.yours, n]; try { localStorage.setItem(YOURS_KEY, JSON.stringify(yours)); } catch (err) {} return { yours }; });
     };
+    // Drag to spin: horizontal drag turns the globe, vertical is left to the page
+    // so the section still scrolls on touch. A drag suppresses the pin click.
+    svg.style.touchAction = "pan-y";
+    let dragId = null, dragX = 0, dragRot = 0, dragged = false;
+    svg.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0) return;
+      dragId = e.pointerId; dragX = e.clientX; dragRot = rot; dragged = false;
+      paused = true; svg.style.cursor = "grabbing";
+      try { svg.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+    svg.addEventListener("pointermove", (e) => {
+      if (dragId !== e.pointerId) return;
+      const dx = e.clientX - dragX;
+      if (!dragged && Math.abs(dx) > 3) dragged = true;
+      if (dragged) rot = dragRot + dx * 0.45;
+    });
+    const endDrag = (e) => {
+      if (dragId !== e.pointerId) return;
+      dragId = null; svg.style.cursor = "pointer";
+      if (e.pointerType !== "mouse") { paused = false; if (this.state.hoverName) this.setState({ hoverName: "" }); }
+      if (dragged) { svg.__noClick = true; setTimeout(() => { svg.__noClick = false; }, 250); }
+    };
+    svg.addEventListener("pointerup", endDrag);
+    svg.addEventListener("pointercancel", endDrag);
     const frame = (now) => {
       const dt = Math.min(0.05, (now - last) / 1000); last = now;
       if (!paused) rot += dt * 12;
@@ -730,8 +755,26 @@ class Component extends DCLogic {
         el.__drag = true;
         const id = "c" + i;
         let off = saved[id] || { x: 0, y: 0 };
+        const bounds = () => {
+          const host = el.closest('[data-r="work-sheet"]');
+          if (!host) return null;
+          const hr = host.getBoundingClientRect(), er = el.getBoundingClientRect();
+          const pad = Math.max(8, hr.width * 0.03);
+          return {
+            minX: off.x + (hr.left + pad - er.left), maxX: off.x + (hr.right - pad - er.right),
+            minY: off.y + (hr.top + pad - er.top), maxY: off.y + (hr.bottom - pad - er.bottom)
+          };
+        };
+        const clamp = (o) => {
+          const b = bounds(); if (!b) return o;
+          return {
+            x: Math.min(Math.max(o.x, Math.min(b.minX, b.maxX)), Math.max(b.minX, b.maxX)),
+            y: Math.min(Math.max(o.y, Math.min(b.minY, b.maxY)), Math.max(b.minY, b.maxY))
+          };
+        };
         const paint = () => { el.style.translate = off.x + "px " + off.y + "px"; };
         paint();
+        requestAnimationFrame(() => { off = clamp(off); paint(); });
         el.style.touchAction = "none";
         el.addEventListener("pointerdown", (e) => {
           if (e.button !== 0) return;
@@ -744,7 +787,7 @@ class Component extends DCLogic {
             const dx = ev.clientX - sx, dy = ev.clientY - sy;
             if (!moved && Math.hypot(dx, dy) > 4) { moved = true; el.style.cursor = "grabbing"; }
             if (!moved) return;
-            off = { x: ox + dx, y: oy + dy };
+            off = clamp({ x: ox + dx, y: oy + dy });
             paint();
           };
           const up = () => {
@@ -834,7 +877,7 @@ class Component extends DCLogic {
       globe: this.state.ticket === "globe" ? React.createElement("svg", { key: "globe", ref: this.globeRef, "data-globe": "", viewBox: "-10 40 420 320", style: { width: "100%", maxWidth: 480, height: "100%", display: "block", overflow: "visible" } }) : null,
       yourCount: this.state.yours.length, hasYours: this.state.yours.length > 0,
       clearYours: () => { try { localStorage.setItem(YOURS_KEY, "[]"); } catch (e) {} this.setState({ yours: [] }); },
-      globeHint: this.state.hoverName ? this.state.hoverName + (this.state.yours.includes(this.state.hoverName) ? " ✓" : "") : "hover to pause · click where you've been",
+      globeHint: this.state.hoverName ? this.state.hoverName + (this.state.yours.includes(this.state.hoverName) ? " ✓" : "") : "drag to spin · click where you've been",
       notCase: p !== "case" && p !== "recruiter", isCase: p === "case",
       isRecruiter: p === "recruiter", notRecruiter: p !== "recruiter",
       openRecruiter: () => this.go("recruiter"), exitRecruiter: () => this.go("home"),
