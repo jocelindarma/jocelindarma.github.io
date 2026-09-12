@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&amp;family=DM+Mono:wght@400;500&amp;family=Caveat:wght@500;600&amp;display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin="anonymous"></script>
+<style>
+  body {
+    --bg: oklch(0.27 0.07 265);
+    --fg: oklch(0.975 0.008 80); --fg-2: oklch(0.80 0.03 265); --fg-3: oklch(0.70 0.03 265); --accent-text: oklch(0.78 0.12 264);
+    --card: #ffffff;
+    --ink: oklch(0.27 0.07 265);
+    --ink-2: oklch(0.46 0.05 265);
+    --ink-3: oklch(0.62 0.04 265);
+    --on-ink: oklch(0.975 0.008 80);
+    --on-ink-2: oklch(0.80 0.03 265);
+    --accent: oklch(0.52 0.22 264);
+    --accent-soft: oklch(0.93 0.04 264);
+    --line: oklch(1 0 0 / 0.22);
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: Nunito, ui-rounded, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  * { box-sizing: border-box; }
+  body { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Ccircle cx='11' cy='11' r='5' fill='%23ffffff' stroke='%231b2a4a' stroke-width='1.6'/%3E%3C/svg%3E") 11 11, auto; }
+  a, button, [data-spot], [data-globe], [data-r="avatar"], [data-r="book-card"] { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ccircle cx='14' cy='14' r='9' fill='%23ffffff' fill-opacity='0.9' stroke='%231b2a4a' stroke-width='1.8'/%3E%3Ccircle cx='14' cy='14' r='2.6' fill='%231b2a4a'/%3E%3C/svg%3E") 14 14, pointer !important; }
+  a { color: var(--accent-text); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
+  a:hover { color: var(--fg); }
+  [data-r="avatar"]:hover img { opacity: 1 !important; }
+  @keyframes jd-walk { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  @keyframes jd-pop { 0% { transform: translate(-50%, -100%) scale(0); } 100% { transform: translate(-50%, -100%) scale(1); } }
+  @keyframes jd-hop { 0%, 60%, 100% { transform: translateY(0); } 75% { transform: translateY(-9px) scaleY(1.06); } 90% { transform: translateY(0) scaleY(0.96); } }
+  @keyframes jd-tear-main { 0% { transform: none; opacity: 1; } 100% { transform: translate(-40px, 30px) rotate(-6deg); opacity: 0; } }
+  @keyframes jd-tear-stub { 0% { transform: none; opacity: 1; } 30% { transform: translate(14px, -6px) rotate(6deg); } 100% { transform: translate(120px, 60px) rotate(28deg); opacity: 0; } }
+  @keyframes jd-code-scroll { 0% { transform: translateY(0); } 100% { transform: translateY(-396px); } }
+  @keyframes jd-breathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.035); } }
+  @keyframes jd-sway { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.5deg); } }
+  @keyframes jd-ping { 0% { transform: scale(0.4); opacity: 0.8; } 100% { transform: scale(1.6); opacity: 0; } }
+  
+  /* Responsive overrides — inline styles carry the desktop layout; these re-flow it on narrower viewports. */
+  @media (max-width: 1100px) {
+    [data-r="root"] { min-width: 0 !important; }
+    [data-r="shell"] { grid-template-columns: minmax(0, 1fr) !important; }
+    [data-r="aside"] { position: static !important; height: auto !important; border-right: 0 !important; border-bottom: 1px solid oklch(1 0 0 / 0.25) !important; display: grid !important; grid-template-columns: auto minmax(0, 1fr) auto !important; grid-template-areas: "avatar name cta" !important; align-items: center !important; gap: 4px 20px !important; padding: 22px 28px !important; overflow: visible !important; }
+    [data-r="avatar"] { grid-area: avatar; width: 64px !important; height: 64px !important; }
+    [data-r="name"] { grid-area: name; margin: 0 !important; font-size: 26px !important; }
+    [data-r="name"] br { display: none; }
+    [data-r="creds"] { display: none !important; }
+    [data-r="cta"] { grid-area: cta; margin: 0 !important; width: auto !important; }
+    [data-r="home-grid"], [data-r="work-grid"], [data-r="about-grid"] { grid-template-columns: minmax(0, 1fr) !important; }
+    [data-r="sec"] { padding: 72px 28px 0 !important; }
+    [data-r="about-street"] { width: calc(100% + 56px) !important; margin-left: -28px !important; margin-right: -28px !important; }
+    [data-r="sec-r"] { padding: 32px 28px 64px !important; }
+  }
+  @media (max-width: 700px) {
+    [data-r="work-sheet"] > img { display: none !important; }
+    [data-r="work-doodle"] { display: none !important; }
+    [data-r="work-sheet"] { margin-top: 20px !important; }
+    [data-r="work-cards"] { position: static !important; grid-template-columns: minmax(0, 1fr) !important; gap: 22px !important; }
+    [data-r="book-card"] { width: 100%; max-width: 320px; justify-self: center; transform: none !important; margin-top: 0 !important; }
+  }
+  @media (max-width: 680px) {
+    [data-r="header"] { height: 72px !important; }
+    [data-r="lead"] { width: 16px !important; }
+    [data-r="header"] [data-stop] { font-size: 12px !important; }
+    [data-r="header"] > div { gap: 28px !important; padding: 0 20px !important; }
+    [data-r="aside"] { grid-template-columns: auto minmax(0, 1fr) !important; grid-template-areas: "avatar name" "cta cta" !important; padding: 18px 20px !important; gap: 4px 14px !important; }
+    [data-r="cta"] { margin-top: 12px !important; width: 100% !important; }
+    [data-r="sec-home"] { padding: 16px 16px 0 !important; }
+    [data-r="sec"] { padding: 56px 20px 0 !important; }
+    [data-r="about-street"] { width: calc(100% + 40px) !important; margin-left: -20px !important; margin-right: -20px !important; }
+    [data-r="sec-r"] { padding: 24px 20px 56px !important; }
+    [data-r="globe-card"] { min-height: 460px !important; padding: 56px 14px 52px !important; }
+    [data-r="desk-card"] { height: auto !important; min-height: 0 !important; aspect-ratio: 4 / 3 !important; }
+    [data-r="strip"] { height: 220px !important; }
+    [data-r="strip-inner"] { bottom: 50px !important; height: 130px !important; }
+    [data-r="walker"] { bottom: 74px !important; width: 66px !important; }
+    [data-r="globe-card"] { min-height: 0 !important; }
+
+    [data-r="h2"] { font-size: 34px !important; }
+    [data-r="two-col"] { grid-template-columns: minmax(0, 1fr) !important; }
+    [data-r="row"] { grid-template-columns: minmax(0, 1fr) !important; gap: 6px !important; }
+    [data-r="row"] > div:last-child { text-align: left !important; white-space: normal !important; }
+    [data-r="polaroids"] { flex-direction: column !important; align-items: center !important; }
+    [data-r="polaroids"] > div { margin-top: 0 !important; width: min(100%, 300px); }
+  }
+
+  @keyframes jd-sprite { from { background-position: 0 0; } to { background-position: 100% 0; } }
+  @keyframes jd-code-roll { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
+  @keyframes jd-float { 0%,100% { transform: translateY(0) rotate(-0.6deg); } 50% { transform: translateY(-6px) rotate(0.6deg); } }
+  @keyframes jd-stamp { 0% { transform: scale(2.2) rotate(-30deg); opacity: 0; } 60% { transform: scale(0.94) rotate(-12deg); opacity: 1; } 100% { transform: scale(1) rotate(-12deg); opacity: 1; } }
+  @keyframes jd-pulse { 0%,100% { box-shadow: 0 0 0 4px oklch(0.52 0.22 264 / 0.18); } 50% { box-shadow: 0 0 0 9px oklch(0.52 0.22 264 / 0.06); } }
+  @keyframes jd-blink { 0%,60% { opacity: 1; } 61%,100% { opacity: 0.2; } }
+  @keyframes jd-nudge { 0%,100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
+  @keyframes jd-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" data-r="root" style="min-height: 100vh; min-width: 1280px;">
+
+  <header data-r="header" style="position: sticky; top: 0; z-index: 50; height: 84px; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: var(--ink); border-bottom: 1px solid oklch(1 0 0 / 0.25); color: var(--on-ink); display: flex; align-items: center;">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 56px; width: 100%; padding: 0 48px;">
+      <button data-stop="home" onClick="{{ goHome }}" style="position: relative; background: none; border: 0; padding: 0 4px 14px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 0.06em; color: var(--on-ink-2);" style-hover="color: var(--on-ink);">
+        home
+        <span data-underline="" style="position: absolute; left: 50%; bottom: 4px; width: 30px; height: 2px; margin-left: -15px; background: var(--on-ink); opacity: 0; transition: opacity 0.18s;"></span>
+      </button>
+      <button data-stop="work" onClick="{{ goWork }}" style="position: relative; background: none; border: 0; padding: 0 4px 14px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 0.06em; color: var(--on-ink-2);" style-hover="color: var(--on-ink);">
+        work
+        <span data-underline="" style="position: absolute; left: 50%; bottom: 4px; width: 30px; height: 2px; margin-left: -15px; background: var(--on-ink); opacity: 0; transition: opacity 0.18s;"></span>
+      </button>
+      <button data-stop="about" onClick="{{ goAbout }}" style="position: relative; background: none; border: 0; padding: 0 4px 14px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 0.06em; color: var(--on-ink-2);" style-hover="color: var(--on-ink);">
+        about
+        <span data-underline="" style="position: absolute; left: 50%; bottom: 4px; width: 30px; height: 2px; margin-left: -15px; background: var(--on-ink); opacity: 0; transition: opacity 0.18s;"></span>
+      </button>
+    </div>
+  </header>
+
+  <div data-r="shell" style="display: grid; grid-template-columns: 340px minmax(0, 1fr);">
+
+     <aside data-r="aside" style="position: sticky; top: 84px; height: calc(100vh - 84px); --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: var(--ink); color: var(--on-ink); border-right: 1px solid oklch(1 0 0 / 0.25); display: flex; flex-direction: column; padding: 44px 36px 36px; overflow-y: auto; overflow-x: hidden;">
+      <div data-r="avatar" style="position: relative; width: 92px; height: 92px; flex: none;">
+        <image-slot id="jd-avatar" src="./art/avatar.png" shape="circle" style="position: absolute; inset: 0; width: 100%; height: 100%;" placeholder="avatar · line-art portrait"></image-slot>
+        <img src="./art/avatar-wink.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; opacity: 0; transition: opacity 0.15s;">
+      </div>
+      <h1 data-r="name" style="margin: 26px 0 0; font-weight: 600; font-size: 42px; line-height: 1.08; letter-spacing: -0.01em;">Jocelin<br> Darma</h1>
+      <div data-r="creds" style="margin-top: 26px; display: flex; flex-direction: column; gap: 14px;">
+        <div>
+          <div style="font-family: 'DM Mono', monospace; font-weight: 500; font-size: 14px;">@MERIDIA LAND</div>
+          <div style="font-family: 'DM Mono', monospace; font-size: 13px; color: var(--on-ink-2); margin-top: 3px;">Senior Backend Engineer</div>
+        </div>
+        <div>
+          <div style="font-family: 'DM Mono', monospace; font-weight: 500; font-size: 14px;">prev @TRAVELOKA · @STARBUCKS</div>
+          <div style="font-family: 'DM Mono', monospace; font-size: 13px; color: var(--on-ink-2); margin-top: 3px;">Software Engineer</div>
+        </div>
+      </div>
+
+      <sc-if value="{{ notRecruiter }}" hint-placeholder-val="{{ true }}"><button onClick="{{ openRecruiter }}" data-r="cta" style="margin-top: auto; flex: none; display: block; width: 100%; text-align: center; padding: 12px; background: none; border: 1.5px solid var(--on-ink-2); color: var(--on-ink); font-family: 'DM Mono', monospace; font-size: 12.5px; letter-spacing: 0.14em; border-radius: 6px; cursor: pointer;" style-hover="background: var(--on-ink); color: var(--fg);">RESUME →</button></sc-if>
+      <sc-if value="{{ isRecruiter }}" hint-placeholder-val="{{ false }}"><button onClick="{{ exitRecruiter }}" data-r="cta" style="margin-top: auto; flex: none; display: block; width: 100%; text-align: center; padding: 12px; background: none; border: 1.5px solid var(--on-ink-2); color: var(--on-ink); font-family: 'DM Mono', monospace; font-size: 12.5px; letter-spacing: 0.14em; border-radius: 6px; cursor: pointer;" style-hover="background: var(--on-ink); color: var(--fg);">← EXIT</button></sc-if>
+    </aside>
+
+    <div style="min-width: 0;">
+
+      <sc-if value="{{ isRecruiter }}" hint-placeholder-val="{{ false }}">
+       <section data-section="recruiter" data-r="sec-r" style="min-height: calc(100vh - 84px); --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: var(--ink); color: var(--on-ink); padding: 40px 48px 80px; animation: jd-in 0.4s ease both;">
+        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+          <a href="./jocelin-darma-resume.pdf" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 10px 18px; border: 1.5px solid oklch(1 0 0 / 0.18); border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.16em; color: var(--on-ink); text-decoration: none;" style-hover="background: #ffffff; color: var(--accent-text); border-color: var(--on-ink);">RESUME PDF ↗</a>
+          <a href="https://www.linkedin.com/in/jocelindarma" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 10px 18px; border: 1.5px solid oklch(1 0 0 / 0.18); border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.16em; color: var(--on-ink); text-decoration: none;" style-hover="background: #ffffff; color: var(--accent-text); border-color: var(--on-ink);">LINKEDIN ↗</a>
+          <a href="mailto:jocelindarma13@gmail.com" style="display: inline-block; padding: 10px 18px; border: 1.5px solid oklch(1 0 0 / 0.18); border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.16em; color: var(--on-ink); text-decoration: none;" style-hover="background: #ffffff; color: var(--accent-text); border-color: var(--on-ink);">EMAIL ↗</a>
+          <a href="https://github.com/jocelindarma" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 10px 18px; border: 1.5px solid oklch(1 0 0 / 0.18); border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.16em; color: var(--on-ink); text-decoration: none;" style-hover="background: #ffffff; color: var(--accent-text); border-color: var(--on-ink);">GITHUB ↗</a>
+        </div>
+        <h2 data-r="h2" style="margin: 44px 0 0; font-weight: 800; font-size: 54px; line-height: 1.05;">Jocelin Darma</h2>
+        <p style="margin: 14px 0 0; font-family: 'DM Mono', monospace; font-size: 15px; line-height: 1.7; color: var(--on-ink-2);">Senior Backend Engineer. BS Computer Science @ Seattle University. Now @ Meridia Land. Prev @ Nawatech, Traveloka, Starbucks, Microsoft.</p>
+        <p style="margin: 10px 0 0; font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 0.08em; color: var(--on-ink-2); opacity: 0.8;">{{ clock }} GMT+7 · {{ today }} · Jakarta, Indonesia</p>
+
+        <div style="margin-top: 56px; padding-bottom: 14px; border-bottom: 1px solid oklch(1 0 0 / 0.18); font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.2em; color: var(--on-ink-2);">EXPERIENCE</div>
+        <sc-for list="{{ resumeJobs }}" as="j" hint-placeholder-count="7">
+          <div style="padding: 24px 0; border-bottom: 1px solid oklch(1 0 0 / 0.18);">
+            <div data-r="row" style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: start;">
+              <div>
+                <div style="font-family: 'DM Mono', monospace; font-weight: 500; font-size: 17px;">{{ j.company }}</div>
+                <div style="margin-top: 4px; font-family: 'DM Mono', monospace; font-size: 13.5px; color: var(--on-ink-2);">{{ j.role }}</div>
+              </div>
+              <div style="text-align: right; font-family: 'DM Mono', monospace; font-size: 13px; color: var(--on-ink-2); white-space: nowrap;">{{ j.dates }}<br><span style="opacity: 0.7;">{{ j.place }}</span></div>
+            </div>
+            <ul style="margin: 14px 0 0; padding-left: 18px; font-family: 'DM Mono', monospace; font-size: 13.5px; line-height: 1.7; color: var(--on-ink); max-width: 980px;">
+              <sc-for list="{{ j.bullets }}" as="b" hint-placeholder-count="2"><li style="margin-top: 4px;">{{ b }}</li></sc-for>
+            </ul>
+          </div>
+        </sc-for>
+
+        <div style="margin-top: 56px; padding-bottom: 14px; border-bottom: 1px solid oklch(1 0 0 / 0.18); font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.2em; color: var(--on-ink-2);">EDUCATION</div>
+        <div data-r="row" style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; padding: 24px 0; border-bottom: 1px solid oklch(1 0 0 / 0.18);"><div><div style="font-family: 'DM Mono', monospace; font-weight: 500; font-size: 17px;">Seattle University</div><div style="margin-top: 4px; font-family: 'DM Mono', monospace; font-size: 13.5px; color: var(--on-ink-2);">BS Computer Science (Cum Laude)</div></div><div style="text-align: right; font-family: 'DM Mono', monospace; font-size: 13px; color: var(--on-ink-2); white-space: nowrap;">Sep 2018 – Dec 2020<br><span style="opacity: 0.7;">Seattle, WA</span></div></div>
+        <div data-r="row" style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; padding: 24px 0; border-bottom: 1px solid oklch(1 0 0 / 0.18);"><div><div style="font-family: 'DM Mono', monospace; font-weight: 500; font-size: 17px;">North Seattle College</div><div style="margin-top: 4px; font-family: 'DM Mono', monospace; font-size: 13.5px; color: var(--on-ink-2);">AS Computer Science</div></div><div style="text-align: right; font-family: 'DM Mono', monospace; font-size: 13px; color: var(--on-ink-2); white-space: nowrap;">Jan 2017 – Aug 2018<br><span style="opacity: 0.7;">Seattle, WA</span></div></div>
+
+        <div style="margin-top: 56px; padding-bottom: 14px; border-bottom: 1px solid oklch(1 0 0 / 0.18); font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.2em; color: var(--on-ink-2);">SKILLS</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; padding-top: 20px;">
+          <sc-for list="{{ resumeSkills }}" as="s" hint-placeholder-count="12"><span style="padding: 7px 12px; border: 1px solid oklch(1 0 0 / 0.18); border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.08em;">{{ s }}</span></sc-for>
+        </div>
+      </section>
+      </sc-if>
+
+      <sc-if value="{{ notCase }}" hint-placeholder-val="{{ true }}">
+      <section data-section="home" data-r="sec-home" style="padding: 28px 28px 0;">
+        <div data-r="home-grid" style="display: grid; grid-template-columns: minmax(400px, 0.8fr) minmax(0, 1.2fr); gap: 20px;">
+          <div data-r="globe-card" style="position: relative; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); color: var(--fg); background: var(--card); border: 1.5px solid var(--ink); border-radius: 12px; min-height: clamp(340px, calc(100vh - 470px), 460px); display: grid; place-items: center; padding: 48px 20px 44px; overflow: hidden; animation: jd-in 0.5s ease both;">
+            <div style="font-family: 'DM Mono', monospace; font-size: 11.5px; letter-spacing: 0.18em; color: var(--fg-3); position: absolute; top: 28px; right: 24px;">WHERE I'VE BEEN</div>
+
+            <sc-if value="{{ showTicket }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ tear }}" title="click to tear" style="position: relative; width: 100%; max-width: 560px; display: grid; grid-template-columns: 1fr 104px; text-align: left; background: none; border: 0; padding: 0; cursor: pointer; font-family: inherit; color: var(--fg); animation: jd-float 6s ease-in-out infinite;">
+              <div data-ticket-main="" style="position: relative; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); color: var(--fg); background: var(--card); border: 1.5px solid var(--ink); border-right: 0; border-radius: 12px 0 0 12px; padding: 22px 26px; box-shadow: 0 18px 40px -24px oklch(0.27 0.07 265 / 0.45);">
+                <div style="display: flex; align-items: flex-end; gap: 14px; padding-bottom: 14px; border-bottom: 1.5px dashed var(--line);">
+                  <div><div style="font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.16em; color: var(--fg-3);">FROM</div><div style="font-weight: 900; font-size: 26px; line-height: 1.1; margin-top: 2px;">CGK</div></div>
+                  <div style="font-weight: 800; font-size: 20px; padding-bottom: 3px; color: var(--accent-text); animation: jd-nudge 1.6s ease-in-out infinite;">✈</div>
+                  <div><div style="font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.16em; color: var(--fg-3);">TO</div><div style="font-weight: 900; font-size: 22px; line-height: 1.1; margin-top: 4px; white-space: nowrap;">THE WORLD</div></div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 14px 0;">
+                  <div><div style="font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.16em; color: var(--fg-3);">PASSENGER</div><div style="font-family: 'DM Mono', monospace; font-weight: 500; font-size: 16px; margin-top: 4px;">you!</div></div>
+                  <div><div style="font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.16em; color: var(--fg-3);">DATE</div><div style="font-family: 'DM Mono', monospace; font-weight: 500; font-size: 16px; margin-top: 4px;">{{ today }}</div></div>
+                  
+                </div>
+                <div style="display: flex; justify-content: flex-start; align-items: flex-end; border-top: 1.5px dashed var(--line); padding-top: 12px;">
+                  <div style="display: flex; gap: 2px; align-items: flex-end; height: 22px;"><span style="width: 2px; height: 100%; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: var(--ink);"></span><span style="width: 4px; height: 100%; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: var(--ink);"></span><span style="width: 2px; height: 100%; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: var(--ink);"></span><span style="width: 6px; height: 100%; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: var(--ink);"></span><span style="width: 2px; height: 100%; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: var(--ink);"></span><span style="width: 3px; height: 100%; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: var(--ink);"></span><span style="width: 5px; height: 100%; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: var(--ink);"></span><span style="width: 2px; height: 100%; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: var(--ink);"></span><span style="width: 4px; height: 100%; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: var(--ink);"></span></div>
+                </div>
+              </div>
+              <div data-ticket-stub="" style="position: relative; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); color: var(--fg); background: var(--accent-soft); border: 1.5px solid var(--ink); border-left: 1.5px dashed var(--ink); border-radius: 0 12px 12px 0; padding: 22px 14px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 18px 40px -24px oklch(0.27 0.07 265 / 0.45);">
+                <span style="position: absolute; top: -12px; left: -12px; width: 22px; height: 22px; border-radius: 50%; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); color: var(--fg); background: var(--card); border: 1.5px solid var(--ink); border-top-color: transparent; border-left-color: transparent; transform: rotate(45deg);"></span>
+                <span style="position: absolute; bottom: -12px; left: -12px; width: 22px; height: 22px; border-radius: 50%; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); color: var(--fg); background: var(--card); border: 1.5px solid var(--ink); border-bottom-color: transparent; border-right-color: transparent; transform: rotate(45deg);"></span>
+                <div><div style="font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.16em; color: var(--fg-3);">SEAT</div><div style="font-weight: 900; font-size: 26px; line-height: 1.1; margin-top: 2px;">1A</div></div>
+                <div><div style="font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.16em; color: var(--fg-3);">BOARDING</div><div style="font-family: 'DM Mono', monospace; font-weight: 500; font-size: 14px; margin-top: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: jd-blink 1s steps(1) infinite;"></span>{{ clock }} <span style="font-size: 10px; color: var(--fg-3);">GMT+7</span></div></div>
+                <div style="font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.16em; color: var(--fg-3);">TEAR HERE ↕</div>
+              </div>
+            </button>
+            </sc-if>
+            <sc-if value="{{ showGlobe }}" hint-placeholder-val="{{ false }}">
+              <div style="position: relative; width: 100%; height: clamp(230px, calc(100vh - 560px), 340px); display: grid; grid-template-rows: minmax(0, 1fr); place-items: center; padding-bottom: 44px; box-sizing: border-box; animation: jd-in 0.6s ease both;">
+                {{ globe }}
+                <div style="position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; align-items: flex-end; font-family: 'DM Mono', monospace; font-size: 11.5px; letter-spacing: 0.14em; color: var(--fg-3); line-height: 1.8;">
+                  <div style="white-space: nowrap; flex: none;"><span style="color: var(--fg);">●</span> JOCELIN · 16<br><span style="color: #6c8fe0;">●</span> YOU · {{ yourCount }}</div>
+                  <div style="text-align: right; max-width: 200px;"><span style="font-family: Caveat, cursive; font-size: 18px; letter-spacing: 0; line-height: 1.2; color: var(--fg-2); display: inline-block;">{{ globeHint }}</span></div>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ showGlobe }}" hint-placeholder-val="{{ false }}">
+              <div style="position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); display: flex; gap: 22px; white-space: nowrap;">
+                <sc-if value="{{ hasYours }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearYours }}" style="background: none; border: 0; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 0.14em; color: var(--fg-3);" style-hover="color: var(--accent-text);">✕ clear yours</button></sc-if>
+              </div>
+            </sc-if>
+            <sc-if value="{{ showTicket }}" hint-placeholder-val="{{ true }}">
+              <span style="position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); font-family: Caveat, cursive; font-size: 19px; color: var(--fg-3);">click the ticket to tear it ↑</span>
+            </sc-if>
+          </div>
+
+          <div ref="{{ deskRef }}" data-r="desk-card" style="position: relative; container-type: size; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); color: var(--fg); background: var(--card); border: 1.5px solid var(--ink); border-radius: 12px; height: clamp(340px, calc(100vh - 470px), 460px); overflow: hidden; animation: jd-in 0.5s 0.08s ease both;">
+            <div data-desk-fit="" style="position: absolute; left: 50%; top: 54%; width: calc(min(100cqw, 182.5cqh) * 1.1); aspect-ratio: 1694 / 928; transform: translate(-50%, -50%);">
+              <img src="./art/home-desk.png" alt="Jocelin's desk: three monitors, a sleeping dog, plants and sticky notes" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block;">
+              <div style="position: absolute; left: 44.4%; top: 38.8%; width: 17.4%; height: 16.0%; clip-path: polygon(0 0, 100% 0, 100% 100%, 79.7% 100.0%, 79.1% 86.0%, 63.9% 86.0%, 63.2% 100.0%, 61.8% 100.0%, 59.8% 87.3%, 57.1% 75.3%, 53.7% 67.3%, 50.3% 62.0%, 46.3% 58.7%, 40.9% 58.0%, 36.1% 59.3%, 31.8% 62.7%, 28.0% 68.0%, 25.3% 77.3%, 23.3% 94.0%, 22.6% 100.0%, 0 100%); --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); color: var(--on-ink); background: #1e2d52; border-radius: 3px; overflow: hidden; pointer-events: none; display: grid; grid-template-columns: 20.5% 1fr;">
+                <div style="border-right: 1px solid oklch(1 0 0 / 0.35); padding: 8% 14%; display: flex; flex-direction: column; gap: 9%;">
+                  <sc-for list="{{ sideLines }}" as="s" hint-placeholder-count="7"><div style="display: flex; gap: 10%; align-items: center;"><div style="width: 22%; aspect-ratio: 1; border: 1px solid oklch(1 0 0 / 0.7); border-radius: 1px; flex: none;"></div><div style="height: 1.5px; width: {{ s }}%; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: #ffffff; opacity: 0.8; border-radius: 999px;"></div></div></sc-for>
+                </div>
+                <div style="position: relative; overflow: hidden;">
+                  <div style="position: absolute; top: 4%; right: 4%; display: flex; gap: 5px;"><span style="width: 4px; height: 4px; border-radius: 50%; border: 1px solid oklch(1 0 0 / 0.7);"></span><span style="width: 4px; height: 4px; border-radius: 50%; border: 1px solid oklch(1 0 0 / 0.7);"></span><span style="width: 4px; height: 4px; border-radius: 50%; border: 1px solid oklch(1 0 0 / 0.7);"></span></div>
+                  <div style="position: absolute; left: 0; right: 0; top: 0; height: 200%; animation: jd-code-roll 14s linear infinite;">
+                    <div style="height: 50%; display: flex; flex-direction: column; justify-content: space-around; padding: 3% 4%;">
+                    <sc-for list="{{ codeLines }}" as="c" hint-placeholder-count="14"><div style="height: 1.5px; margin-left: {{ c.indent }}%; width: {{ c.width }}%; border-radius: 999px; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: #ffffff; opacity: {{ c.op }};"></div></sc-for>
+                  </div>
+                    <div style="height: 50%; display: flex; flex-direction: column; justify-content: space-around; padding: 3% 4%;">
+                    <sc-for list="{{ codeLines }}" as="c" hint-placeholder-count="14"><div style="height: 1.5px; margin-left: {{ c.indent }}%; width: {{ c.width }}%; border-radius: 999px; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: #ffffff; opacity: {{ c.op }};"></div></sc-for>
+                  </div>
+                  </div>
+                </div>
+              </div>
+              
+              <sc-for list="{{ deskSpots }}" as="s" hint-placeholder-count="0">
+                <a data-spot="" href="{{ s.href }}" target="_blank" rel="noopener noreferrer" onMouseEnter="{{ s.enter }}" onMouseLeave="{{ s.leave }}" onFocus="{{ s.enter }}" onBlur="{{ s.leave }}" aria-label="{{ s.tip }}" style="position: absolute; left: {{ s.l }}%; top: {{ s.t }}%; width: {{ s.w }}%; height: {{ s.h }}%; display: block; cursor: pointer; border-radius: 10px; outline: none;"></a>
+              </sc-for>
+              <sc-for list="{{ deskNotes }}" as="n" hint-placeholder-count="0">
+                <div style="position: absolute; left: {{ n.nl }}%; top: {{ n.nt }}%; width: {{ n.nw }}%; transform: rotate(-2deg); font-family: Caveat, cursive; font-weight: 600; font-size: clamp(13px, 1.7cqw, 20px); line-height: 1.1; white-space: nowrap; color: var(--ink); text-align: center; pointer-events: none; z-index: 3; animation: jd-in 0.25s ease both;">{{ n.tip }}</div>
+                
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div data-r="strip" style="position: relative; margin-top: 20px; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); color: var(--fg); background: var(--card); border: 1.5px solid var(--ink); border-radius: 12px; height: 300px; overflow: hidden; animation: jd-in 0.5s 0.16s ease both;">
+          <div data-r="strip-inner" style="position: absolute; left: 0; right: 0; bottom: 60px; height: 190px; overflow: hidden;">
+            <div style="display: flex; width: max-content; height: 100%; animation: jd-walk 40s linear infinite;">
+              <img src="./art/skyline-wide.png" alt="" style="height: 100%; width: auto; display: block; flex: none;">
+              <img src="./art/skyline-wide.png" alt="" style="height: 100%; width: auto; display: block; flex: none;">
+            </div>
+          </div>
+          <div data-r="walker" style="position: absolute; left: 50%; bottom: 26px; width: 70px; aspect-ratio: 285 / 510; transform: translateX(-50%); background-image: url('./art/walker-sheet.png'); background-size: 600% 100%; background-repeat: no-repeat; animation: jd-sprite 0.78s steps(6, jump-none) infinite; pointer-events: none; z-index: 3"></div>
+        </div>
+      </section>
+      
+      <section data-section="work" data-r="sec" style="padding: 96px 40px 0;">
+        <svg width="0" height="0" style="position: absolute;"><defs><marker id="jd-arw" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1 L8 5 L1 9" fill="none" stroke="currentColor" stroke-width="2"></path></marker></defs></svg>
+        
+        <div style="position: relative; display: inline-block; font-family: Caveat, cursive; font-weight: 500; font-size: 40px; line-height: 1; color: var(--fg); transform: rotate(-8deg); transform-origin: left bottom; width: 261px; height: 44px">Some of my works<svg viewBox="0 0 120 14" style="position: absolute; left: 4px; top: 100%; width: 110px; color: var(--fg);" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M2 4 C34 1 74 2 104 5"></path><path d="M6 11 C30 8 58 9 82 11"></path></svg></div><div data-r="work-sheet" style="position: relative; width: 100%; margin-top: -40px; container-type: inline-size; color: var(--fg);">
+          
+
+
+
+
+
+
+
+
+          <div data-r="work-cards" style="position: absolute; left: 13%; right: 12%; top: 29%; bottom: 17%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3cqw; align-items: start; align-content: start;">
+
+            <button data-r="book-card" onClick="{{ openMeridia }}" style="position: relative; margin-top: 0px; transform: rotate(0deg); background: url('./art/note-1.png') center / 100% 100% no-repeat; border: 0; padding: 0; aspect-ratio: 308 / 299; container-type: inline-size; cursor: pointer; text-align: left; font-family: inherit; color: var(--ink); transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.35s;" style-hover="transform: translateY(-8px) scale(1.04); filter: drop-shadow(0 18px 26px oklch(0 0 0 / 0.35));">
+              <div style="position: absolute; left: 19%; right: 19%; top: 28%; bottom: 22%; display: flex; flex-direction: column; gap: 2.5cqw; transform: rotate(-9.5deg); transform-origin: 50% 50%;">
+                
+                <span style="font-family: Caveat, cursive; font-size: max(16px, 10.5cqw); line-height: 1.1; text-wrap: balance;">A benchmark we can trust</span>
+                <span style="font-family: 'DM Mono', monospace; font-size: max(10px, 4cqw); letter-spacing: 0.14em; color: oklch(0.45 0.1 265);">open ↗</span>
+              </div>
+            </button>
+
+            <button data-r="book-card" onClick="{{ openBunny }}" style="position: relative; margin-top: 26px; transform: rotate(0deg); background: url('./art/note-2.png') center / 100% 100% no-repeat; border: 0; padding: 0; aspect-ratio: 308 / 299; container-type: inline-size; cursor: pointer; text-align: left; font-family: inherit; color: var(--ink); transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.35s;" style-hover="transform: translateY(-8px) scale(1.04); filter: drop-shadow(0 18px 26px oklch(0 0 0 / 0.35));">
+              <div style="position: absolute; left: 19%; right: 19%; top: 28%; bottom: 22%; display: flex; flex-direction: column; gap: 2.5cqw; transform: rotate(2.5deg); transform-origin: 50% 50%;">
+                
+                <span style="font-family: Caveat, cursive; font-size: max(16px, 10.5cqw); line-height: 1.1; text-wrap: balance;">Angy Bunny</span>
+                <span style="font-family: 'DM Mono', monospace; font-size: max(10px, 4cqw); letter-spacing: 0.14em; color: oklch(0.45 0.1 265);">open ↗</span>
+              </div>
+            </button>
+
+            <button data-r="book-card" onClick="{{ openDam }}" style="position: relative; margin-top: 8px; transform: rotate(0deg); background: url('./art/note-3.png') center / 100% 100% no-repeat; border: 0; padding: 0; aspect-ratio: 308 / 299; container-type: inline-size; cursor: pointer; text-align: left; font-family: inherit; color: var(--ink); transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.35s;" style-hover="transform: translateY(-8px) scale(1.04); filter: drop-shadow(0 18px 26px oklch(0 0 0 / 0.35));">
+              <div style="position: absolute; left: 19%; right: 19%; top: 28%; bottom: 22%; display: flex; flex-direction: column; gap: 2.5cqw; transform: rotate(8deg); transform-origin: 50% 50%;">
+                
+                <span style="font-family: Caveat, cursive; font-size: max(16px, 10.5cqw); line-height: 1.1; text-wrap: balance;">One home for every asset</span>
+                <span style="font-family: 'DM Mono', monospace; font-size: max(10px, 4cqw); letter-spacing: 0.14em; color: oklch(0.45 0.1 265);">open ↗</span>
+              </div>
+            </button>
+          </div>
+        <img src="./art/work-sheet6.png" alt="" style="width: 100%; height: auto; display: block; pointer-events: none;"></div>
+      </section><section data-section="about" data-r="sec" style="padding: 96px 40px 0;">
+        <div style="position: relative; display: inline-block; font-family: Caveat, cursive; font-size: 27px; color: var(--fg); transform: rotate(-1.5deg);">a little about me<svg viewBox="0 0 120 8" style="position: absolute; left: 2px; top: 100%; width: 100px;" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 4 C34 1 74 2 104 5"></path></svg></div>
+        <div data-r="about-grid" style="display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 64px; align-items: start; margin-top: 44px;">
+          <div>
+            <h2 data-r="h2" style="margin: 0; font-weight: 600; font-size: clamp(34px, 3.3vw, 56px); line-height: 1.06; letter-spacing: -0.015em;">Currently figuring<br>things out.</h2>
+            <p style="margin: 26px 0 0; font-family: 'DM Mono', monospace; font-size: 14.5px; line-height: 1.85;">Professionally: software engineer.<br>Personally: still opening 47 tabs to understand one thing.</p>
+            <p style="margin: 22px 0 0; font-family: 'DM Mono', monospace; font-size: 14.5px; line-height: 1.85; color: var(--fg-2); max-width: 62ch;">I have a tendency to get very curious about very random things.</p>
+            <p style="margin: 18px 0 0; font-family: 'DM Mono', monospace; font-size: 14.5px; line-height: 1.85; color: var(--fg-2); max-width: 62ch;">One minute I'm learning how something works, the next I'm three hours deep into a rabbit hole I absolutely did not need to go down.</p>
+            <p style="margin: 18px 0 0; font-family: 'DM Mono', monospace; font-size: 14.5px; line-height: 1.85; color: var(--fg-2); max-width: 62ch;">I like making things, learning new things, and occasionally sticking with them long enough to call it a hobby.</p>
+          </div>
+          <div style="padding-top: 10px;">
+            <div style="font-family: Caveat, cursive; font-size: 25px; color: var(--fg);">outside of work, you can find me...</div>
+            <div style="margin-top: 14px; border-top: 1px solid oklch(1 0 0 / 0.16);">
+
+            <div style="display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 18px; align-items: baseline; padding: 13px 0; border-bottom: 1px solid oklch(1 0 0 / 0.16);"><span style="font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.14em; color: var(--fg-2);">MOVING</span><span style="font-family: 'DM Mono', monospace; font-size: 14px; line-height: 1.6;">badminton · pilates · biking</span></div>
+
+            <div style="display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 18px; align-items: baseline; padding: 13px 0; border-bottom: 1px solid oklch(1 0 0 / 0.16);"><span style="font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.14em; color: var(--fg-2);">HUNTING</span><span style="font-family: 'DM Mono', monospace; font-size: 14px; line-height: 1.6;">good saltbread · coffee · matcha</span></div>
+
+            <div style="display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 18px; align-items: baseline; padding: 13px 0; border-bottom: 1px solid oklch(1 0 0 / 0.16);"><span style="font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.14em; color: var(--fg-2);">WATCHING</span><span style="font-family: 'DM Mono', monospace; font-size: 14px; line-height: 1.6;">Netflix, probably</span></div>
+
+            <div style="display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 18px; align-items: baseline; padding: 13px 0; border-bottom: 1px solid oklch(1 0 0 / 0.16);"><span style="font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.14em; color: var(--fg-2);">LEARNING</span><span style="font-family: 'DM Mono', monospace; font-size: 14px; line-height: 1.6;">electric guitar, currently</span></div>
+            </div>
+          </div>
+        </div>
+        <img data-r="about-street" src="./art/about-street.png" alt="Line-art street scene: a girl walking her poodle past a cafe and bakery, city skyline across the water" style="width: calc(100% + 80px); max-width: none; height: auto; display: block; margin: 48px -40px -32px; pointer-events: none;">
+      </section>
+      
+      </sc-if>
+
+      <sc-if value="{{ isCase }}" hint-placeholder-val="{{ false }}">
+      <main style="padding: 48px 40px 0;">
+        <div style="max-width: 900px; margin: 0 auto;">
+          <button onClick="{{ goWork }}" style="background: none; border: 0; padding: 0; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 12.5px; letter-spacing: 0.14em; color: var(--fg-3);" style-hover="color: var(--accent-text);">← BACK TO WORK</button>
+          <div style="margin-top: 34px; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.18em; color: var(--accent-text);">{{ caseKicker }}</div>
+          <h2 style="margin: 14px 0 0; font-weight: 800; font-size: 52px; line-height: 1.08; text-wrap: balance;">{{ caseTitle }}</h2>
+          <p style="margin: 22px 0 0; font-family: 'DM Mono', monospace; font-size: 15px; line-height: 1.75; max-width: 64ch; color: var(--fg-2); white-space: pre-line; text-wrap: pretty;">{{ caseLede }}</p>
+
+          <sc-if value="{{ hasHero }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 28px;">
+            <img src="{{ caseSlotSrc }}" alt="{{ caseSlotHint }}" style="display: block; width: 100%; height: 440px; object-fit: contain;" /></div>
+          </sc-if>
+
+          <sc-if value="{{ hasLive }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top: 36px;">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.16em; color: var(--fg-3);">
+              <span>LIVE PREVIEW</span>
+              <a href="{{ caseLive }}" target="_blank" rel="noopener noreferrer" style="letter-spacing: 0.16em;">OPEN IN A NEW TAB ↗</a>
+            </div>
+            <div style="margin-top: 12px; height: 620px; border: 1.5px solid var(--ink); border-radius: 12px; overflow: hidden; background: var(--card);">
+              <iframe src="{{ caseLive }}" title="Angy Bunny, live" loading="lazy" style="display: block; width: 100%; height: 100%; border: 0;"></iframe>
+            </div>
+          </div>
+          </sc-if>
+
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; margin-top: 20px; font-family: 'DM Mono', monospace; font-size: 13px;">
+            <span style="font-size: 10.5px; letter-spacing: 0.16em; color: var(--fg-3);">STACK</span>
+            <span style="color: var(--fg-2); letter-spacing: 0.04em;">{{ caseStack }}</span>
+          </div>
+
+          <div style="margin-top: 52px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.16em; color: var(--fg-3);">{{ caseSectionsLabel }}</div>
+          <div style="margin-top: 26px; display: flex; flex-direction: column; gap: 40px;">
+            <sc-for list="{{ caseSections }}" as="sec" hint-placeholder-count="3">
+              <div style="display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; align-items: start;">
+                <h3 style="margin: 0; font-weight: 800; font-size: 24px; line-height: 1.25;">{{ sec.h }}</h3>
+                <p style="margin: 0; font-family: 'DM Mono', monospace; font-size: 14.5px; line-height: 1.8; color: var(--fg-2); white-space: pre-line; text-wrap: pretty;">{{ sec.p }}</p>
+              </div>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ hasShipped }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 52px; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); color: var(--fg); background: var(--card); border: 1.5px solid var(--ink); border-radius: 12px; padding: 26px 30px;">
+            <div style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.16em; color: var(--fg-3);">WHAT SHIPPED</div>
+            <ul style="margin: 14px 0 0; padding-left: 20px; font-size: 16px; font-weight: 600; line-height: 1.8;">
+              <sc-for list="{{ caseShipped }}" as="item" hint-placeholder-count="3"><li>{{ item.t }}</li></sc-for>
+            </ul>
+          </div>
+          </sc-if>
+
+          <sc-if value="{{ hasLive }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top: 52px; padding-top: 28px; border-top: 1px solid var(--line);">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px; font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 0.12em;">
+              <a href="{{ caseLive }}" target="_blank" rel="noopener noreferrer">LIVE PROJECT →</a>
+              <span style="color: var(--fg-3);">·</span>
+              <a href="{{ caseRepo }}" target="_blank" rel="noopener noreferrer">GITHUB →</a>
+            </div>
+            <p style="margin: 22px 0 0; font-family: 'DM Mono', monospace; font-size: 14.5px; line-height: 1.8; color: var(--fg-2); max-width: 64ch; text-wrap: pretty;">{{ caseCloser }}</p>
+            <p style="margin: 14px 0 0; font-family: 'DM Mono', monospace; font-size: 14.5px; line-height: 1.8;"><a href="{{ caseRepo }}" target="_blank" rel="noopener noreferrer">View the Angy Bunny repo</a></p>
+          </div>
+          </sc-if>
+
+          <button onClick="{{ caseNext }}" style="margin-top: 40px; display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 24px 28px; --fg: var(--ink); --fg-2: var(--ink-2); --fg-3: var(--ink-3); --accent-text: var(--accent); --line: oklch(0.88 0.02 265); background: var(--ink); color: var(--on-ink); border: 0; border-radius: 12px; cursor: pointer; font-family: inherit; text-align: left;" style-hover="background: var(--accent);">
+            <span><span style="display: block; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.16em; color: var(--on-ink-2);">NEXT</span><span style="display: block; margin-top: 6px; font-weight: 800; font-size: 22px;">{{ caseNextLabel }}</span></span>
+            <span style="font-size: 26px;">→</span>
+          </button>
+        </div>
+      </main>
+      </sc-if>
+
+      <sc-if value="{{ notRecruiter }}" hint-placeholder-val="{{ true }}">
+
+      
+      <footer data-r="footer" style="margin-top: 32px; padding: 24px 40px 40px; border-top: 1px solid oklch(1 0 0 / 0.25); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+        <span style="font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.08em; color: var(--fg-3);">© 2026 jocelin darma</span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <a href="https://www.linkedin.com/in/jocelindarma" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn" style="display: inline-flex; width: 36px; height: 36px; align-items: center; justify-content: center; color: var(--fg-3); border-radius: 8px;" style-hover="color: var(--on-ink); background: oklch(1 0 0 / 0.1);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 9.5v8M6.5 6.5v.01M10.5 17.5v-8M10.5 12.5c0-1.7 1.3-3 3-3s3 1.3 3 3v5"></path><rect x="3" y="3" width="18" height="18" rx="3"></rect></svg></a>
+          <a href="mailto:jocelindarma13@gmail.com" aria-label="Email" title="Email" style="display: inline-flex; width: 36px; height: 36px; align-items: center; justify-content: center; color: var(--fg-3); border-radius: 8px;" style-hover="color: var(--on-ink); background: oklch(1 0 0 / 0.1);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></a>
+          <a href="https://github.com/jocelindarma" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub" style="display: inline-flex; width: 36px; height: 36px; align-items: center; justify-content: center; color: var(--fg-3); border-radius: 8px;" style-hover="color: var(--on-ink); background: oklch(1 0 0 / 0.1);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"></path></svg></a>
+          <a href="https://www.instagram.com/jocelindarma" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram" style="display: inline-flex; width: 36px; height: 36px; align-items: center; justify-content: center; color: var(--fg-3); border-radius: 8px;" style-hover="color: var(--on-ink); background: oklch(1 0 0 / 0.1);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"></circle></svg></a>
+        </div>
+      </footer>
+      </sc-if>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;sounds&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Interaction&quot;}}">
+const CASES = {
+  meridia: {
+    kicker: "CASE STUDY",
+    title: "A benchmark we can trust",
+    lede: "When software makes decisions about real-world geographic data, \u201Cit seems to work\u201D isn't really good enough.\n\nI worked on a benchmark system for geospatial compliance validators that runs against representative production data and answers two questions: did the results change? Did it get slower?\n\nThe tricky part was making sure the benchmark itself could be trusted.",
+    role: "Senior Backend Engineer, Engine Team",
+    time: "Jan 2026 – present",
+    stack: "Python · GeoPandas · pytest-benchmark · Airflow · AWS Fargate · S3 · Datadog",
+    slot: "jd-case-benchmark-v2", slotSrc: "./art/case-benchmark-a.png",
+    slotHint: "benchmark flow diagram",
+    sections: [
+      { h: "The problem", p: "Validators were constantly evolving, but there wasn't a reliable way to know whether a release had changed the actual results, introduced a performance regression, or simply happened to run on a slower machine.\n\nBy the time a performance problem became obvious, it could already be affecting production.\n\nA useful benchmark needed three things.\n\nReal data. Representative datasets and hundreds of gigabytes of geospatial reference layers — far more than a single container could comfortably hold.\n\nExact answers. For compliance data, close enough isn't enough. A tiny geometry difference can mean a different decision.\n\nTrustworthy timings. Cloud hardware isn't deterministic. A naive \u201C20% slower\u201D doesn't necessarily mean the code got 20% slower." },
+      { h: "What I built", p: "I led the work end to end — from the benchmark design and test runner to the scheduled pipeline and reporting.\n\nEvery week, the system runs each validator against a set of representative datasets in parallel. Each run executes every validator, records performance, checks results against a known-good version, compares changed validators against their previous release, and surfaces meaningful regressions automatically.\n\nRather than build a completely new infrastructure stack, I worked with the existing data-processing environment and reused its orchestration and shared storage setup.\n\nThe result was a benchmark that could run regularly, at scale, without becoming another system someone had to babysit." },
+      { h: "The hard parts", p: "01 — The benchmark was slow because of the data. The validators were repeatedly reading large geospatial layers from storage, once for every plot. One dataset could take 30 minutes per validation pass.\n\nMy first approach was a grid-based cache. It worked until it didn't. A plot crossing a particular geographic boundary could fall between grid cells and completely bypass the cache. On another dataset with widely distributed plots, the cache itself became a memory problem.\n\nSo I changed the approach: read each reference layer once, clip it to the area covered by the dataset, then run the validators against the smaller in-memory layer. The slowest check became 31% faster, while the worst dataset went from roughly 2.5 hours of compute to around 5 minutes. More importantly, the same finding helped inform an improvement to the production system.\n\n02 — Cloud machines aren't actually identical. The benchmark was running on ephemeral cloud compute, which meant the underlying hardware could vary. I measured multiple CPU generations and found performance differences of roughly 70% between them.\n\nPinning the CPU type removed most of that variation — but there was still roughly a 15% swing between runs. That turned out not to be CPU performance at all. Neighbouring workloads were competing for memory.\n\nSo instead of pretending benchmark numbers were perfectly deterministic, I designed the regression detection around measured baseline noise. The system runs identical code repeatedly to establish how much variation is normal. If two identical runs can differ by X, X is noise. Only performance changes beyond that range are treated as meaningful.\n\n03 — False alarms are worse than they look. At one point, a validator's implementation changed without its profile version being updated. The benchmark interpreted this as a performance regression and kept reporting roughly a 21% slowdown for weeks.\n\nThe lesson was pretty straightforward: performance history needs to follow the thing that actually changed. Timing data is now tracked against the validator version rather than relying on a separate profile identifier.\n\n04 — Sometimes the right engineering decision is to revert your own fix. I also built a memory optimisation that appeared to solve a problem. After digging into the actual failure mode, it became clear that the problem wasn't real enough to justify the change. So I reverted it. It would have introduced unnecessary complexity and reset the established performance baseline. Not every working fix is worth shipping." },
+      { h: "Why byte-exact?", p: "With geospatial data, a result can look identical while still being different. And if a compliance decision needs to be audited later, \u201Cthe output was approximately the same\u201D isn't particularly useful.\n\nSo each validator's output is normalised into a deterministic text representation and compared character for character against a saved reference. There is a reference for each release and CPU architecture, since floating-point calculations can differ slightly between architectures. That means any mismatch is treated as an actual change.\n\nTwo safeguards keep the benchmark from accidentally making bad data the new truth: new releases create their own reference automatically, and references aren't created when required source data is missing. Otherwise, an empty or incomplete result could accidentally become the expected result." },
+      { h: "What I took away", p: "The biggest lesson wasn't really about benchmarking. It was that measurement is only useful when you understand what can make the measurement wrong.\n\nA benchmark can be technically correct and still give you misleading answers because of hardware variation, memory contention, caching behaviour, data differences, or versioning mistakes.\n\nBuilding the runner meant learning to separate actual regressions from everything that merely looks like one. And that's probably the part I'm most proud of." }
+    ],
+    shipped: [
+      { t: "Weekly benchmark runner — automated validation across representative real-world datasets, running workloads in parallel." },
+      { t: "Byte-exact correctness checks — deterministic output comparison across releases and CPU architectures." },
+      { t: "Release-to-release performance tracking — changed validators are automatically compared against their previous baselines." },
+      { t: "Regression detection — thresholds are based on observed benchmark noise rather than arbitrary percentages." },
+      { t: "Automated reporting & monitoring — results are surfaced through dashboards and alerts, with actionable tickets for genuine regressions." },
+      { t: "Geospatial performance improvements — reworked reference-layer loading reduced the slowest validation by 31% and cut the worst-case compute time from ~2.5 hours to ~5 minutes." }
+    ],
+    next: "bunny", nextLabel: "A little online shop for very good brownies"
+  },
+  bunny: {
+    kicker: "ANGY BUNNY \u00B7 FULL-STACK PROJECT",
+    title: "A little online shop for very good brownies.",
+    lede: "A playful e-commerce site built for a home bakery \u2014 from browsing the menu to adding treats to a cart, signing in, and collecting points along the way.",
+    role: "Full-stack, solo project",
+    time: "2026",
+    stack: "Next.js \u00B7 React \u00B7 TypeScript \u00B7 Tailwind CSS \u00B7 Supabase",
+    slot: "jd-case-bunny",
+    slotHint: "",
+    live: "https://angy-bunny.vercel.app/",
+    repo: "https://github.com/jocelindarma/angy-bunny",
+    repoLabel: "View the Angy Bunny repo",
+    closer: "The actual implementation supports the menu and cart flow, while the rewards area includes joining, earning points, and redeeming points for a free brownie cup.",
+    sectionsLabel: "WHAT I BUILT",
+    sections: [
+      { h: "Product storefront", p: "Browsable menu for brownies, cheesecakes, and other treats." },
+      { h: "Cart experience", p: "Add items, adjust quantities, and manage the cart." },
+      { h: "Authentication", p: "Supabase-powered sign up, sign in, and password recovery." },
+      { h: "Loyalty system", p: "User accounts with points and a rewards flow." },
+      { h: "Playful UI", p: "Designed the whole experience around the bakery's bunny identity." }
+    ],
+    shipped: [],
+    next: "dam", nextLabel: "One home for every asset"
+  },
+  dam: {
+    kicker: "CASE STUDY",
+    title: "One home for every asset",
+    lede: "A centralized asset library for a distributed marketing organization.\n\nMarketing assets were everywhere — across teams, platforms, and storage systems. The challenge wasn't just building another library. It was creating a reliable path for assets to get in, stay organized, and actually become searchable.",
+    role: "Software Engineer II, Content Marketing Platform",
+    time: "Nov 2024 – Feb 2025",
+    stack: "Java · Spring Boot · Google Vertex AI",
+    slot: "jd-case-assets-v2", slotSrc: "./art/case-assets-a.png",
+    slotHint: "asset library flow diagram",
+    sections: [
+      { h: "The problem", p: "When multiple teams create and manage content independently, things get messy fast.\n\nAssets end up scattered across different platforms, naming conventions vary, metadata is inconsistent, and finding the right file becomes a surprisingly manual process.\n\nThe goal was simple: one place to manage the assets, without making the teams change how they work.\n\nThe tricky part wasn't the library. It was the pipeline behind it.\n\nAssets were coming from different sources and needed to make their way into a single system reliably. That meant thinking about things like: different ingestion sources and formats, inconsistent or incomplete metadata, duplicate assets, failed or partial ingestion, making the process observable and recoverable, and keeping the system reliable as the library grows.\n\nBasically: getting a file from A → B sounds easy until there are 10,000 of them." },
+      { h: "Making assets easier to find", p: "Once everything was in one place, the next problem was: how do you actually find anything?\n\nI explored AI-powered auto-tagging using Vertex AI to generate metadata from the content itself. Instead of relying entirely on whoever uploaded an asset to describe it correctly, the system could start understanding what was actually inside the asset.\n\nIt was an early exploration, but it opened up an interesting direction: what if an asset library could understand its own contents?" },
+      { h: "Keeping the boring stuff boring", p: "A centralized system becomes a problem of its own if people can't trust it.\n\nI worked on unit and integration testing across the service, bringing test coverage above 80% and making the ingestion and core workflows more predictable.\n\nBecause when your job is basically \u201Cput everything in one place,\u201D losing something along the way is not a particularly great feature." },
+      { h: "What I learned", p: "01 — Centralization is a data problem, not just a UI problem. A nice library doesn't solve much if the data entering it is inconsistent. The real work was designing the path before the asset ever appeared in the library.\n\n02 — Reliability is a feature. Ingestion failures are inevitable. The important part is making them visible, recoverable, and safe to retry.\n\n03 — Search starts with good metadata. AI can make metadata generation smarter, but it doesn't replace good system design. You still need a reliable foundation underneath it.\n\n04 — The best systems disappear into the workflow. The goal wasn't to give teams another thing to manage. It was to make finding and managing assets feel like one continuous workflow, regardless of where they originally came from." }
+    ],
+    shipped: [
+      { t: "Centralized asset management — a Java/Spring Boot service for bringing distributed marketing assets into a single library." },
+      { t: "Reliable ingestion workflows — designed around inconsistent sources, metadata, failures, and recoverability." },
+      { t: "AI-assisted metadata exploration — prototype using Google Vertex AI to improve asset tagging and discoverability." },
+      { t: "80%+ test coverage — unit and integration testing across core services." }
+    ],
+    next: "meridia", nextLabel: "A benchmark we can trust"
+  },
+};
+
+const MONTHS = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+function jakartaNow() {
+  const d = new Date(Date.now() + (7 * 60 + new Date().getTimezoneOffset()) * 60000);
+  const p = n => String(n).padStart(2, "0");
+  return { today: `${p(d.getDate())} ${MONTHS[d.getMonth()]}`, clock: `${p(d.getHours())}:${p(d.getMinutes())}` };
+}
+
+const MY_COUNTRIES = ["Indonesia", "China", "Japan", "Australia", "France", "Italy", "Morocco", "Spain", "Portugal", "Mexico", "United States of America", "South Korea", "Malaysia", "Thailand", "Canada"];
+const MY_PINS = [["Singapore", 103.8, 1.3]]; // too small for the 110m map, drawn as a pin
+const RESUME_JOBS = [
+  { company: "Meridia Land", role: "Senior Backend Engineer – Engine Team", dates: "Jan 2026 – Present", place: "Remote (Amsterdam)", bullets: [
+    "Designed and scaled backend services for Meridia Verify, a SaaS geospatial data validation platform processing millions of farm plot records across 35+ countries, powering high-throughput ingestion and validation pipelines",
+    "Led the initiative to build an automated benchmark testing runner, executing weekly and on every release with a byte-exact correctness gate and Datadog dashboards" ] },
+  { company: "Nawatech", role: "Full Stack Developer", dates: "Nov 2023 – Nov 2024 · Feb 2025 – Jun 2026", place: "Jakarta, Indonesia", bullets: [
+    "Built and shipped GPT-powered omnichannel chatbots and backend services for enterprise clients across banking, government, and construction, integrating Azure Bot Framework, Qiscus, LINE, and Telegram with custom FastAPI-based orchestration backends",
+    "Developed a natural-language virtual assistant for plantation management, enabling senior executives to monitor harvesting operations, query Power BI dashboards, and trigger operational workflows through conversational interfaces; reduced reporting time by up to 95% through UIPath RPA integration",
+    "Delivered end-to-end web platforms for internal and enterprise use cases, covering HR and project management, search-driven applications with Elasticsearch, government revenue management, and enterprise intranet systems" ] },
+  { company: "Traveloka", role: "Software Engineer II – Content Marketing Platform", dates: "Nov 2024 – Feb 2025", place: "Jakarta, Indonesia", bullets: [
+    "Built and launched a Digital Asset Management (DAM) system in Java/Spring Boot, centralizing assets across teams and significantly improving searchability and operational efficiency",
+    "Prototyped AI-powered auto-tagging using Google Vertex AI, improving metadata generation and asset discoverability",
+    "Implemented unit and integration testing (TestNG, Mockito), achieving 80%+ coverage and improving system reliability" ] },
+  { company: "Starbucks Corporation", role: "Application Developer I – Service Observability Engineering", dates: "Jul 2021 – Nov 2022", place: "Seattle, Washington", bullets: [
+    "Developed microservices-based applications using React, Flask, MongoDB, Docker for internal observability tools",
+    "Automated escalation workflows via Slack bot (Bolt SDK), improving service desk efficiency and cross-team coordination",
+    "Built dashboards tracking health signals across interrelated technology systems, improving incident/outage responsiveness and cutting resolution times by 40%" ] },
+  { company: "Microsoft", role: "Software Data Operations Engineer — Microsoft Power BI", dates: "Feb 2021 – Jul 2021", place: "Seattle, Washington", bullets: [
+    "Contract position through MAQ Software",
+    "Developed new features and Custom Visuals for reporting capabilities in Power BI Desktop",
+    "Used Power BI to pull data from multiple databases and built a range of interactive dashboards and reports supporting business decision-making" ] },
+  { company: "Starbucks Corporation", role: "Application Developer I Intern — Operations Command Center", dates: "Jun 2020 – Aug 2020", place: "Seattle, Washington", bullets: [
+    "Expanded capabilities of a critical internal site displaying health status for Starbucks Technology products and services, improving the mean time to respond (MTTR) for outages by more than 20%",
+    "Gathered requirements and designed/implemented key UI and data integration elements" ] },
+  { company: "Expedia Group", role: "Student Software Developer — Vrbo", dates: "Sep 2019 – Jun 2020", place: "Seattle, Washington", bullets: [
+    "Senior Capstone Project",
+    "Developed an Android mobile application in Java and Kotlin that allows speech-to-speech translation between 60 different languages; this will serve as a proof-of-concept for future feature integration with the Vrbo app. Project involves speech-to-text and text-to-speech conversion, natural language processing (NLP), cloud integration and building the mobile application itself." ] },
+  { company: "AiChat Pte Ltd", role: "Software Developer Intern", dates: "Jul 2019 – Sep 2019", place: "Jakarta, Indonesia", bullets: [
+    "Designed and implemented features for their web content management system (CMS) using ReactJS" ] },
+  { company: "PERMIAS Nasional", role: "Junior Web Developer", dates: "Aug 2017 – Jun 2019", place: "Seattle, Washington", bullets: [
+    "Handled the overall development and maintenance of the organization's website" ] }
+];
+const RESUME_SKILLS = ["Python", "Java", "JavaScript", "TypeScript", "React", "Redux", "Next.js", "Tailwind", "HTML/CSS", "Node.js", "NestJS", "Express", "Flask", "FastAPI", "Spring Boot", "PostgreSQL", "MongoDB", "Docker", "Git", "Azure", "AWS", "Agile Scrum", "CI/CD", "Automated Testing"];
+const DESK_SPOTS = [
+  { id: "dogscreen", href: "https://www.instagram.com/mikenjiyon", tip: "he lowkey an influencer", l: 31.7, t: 40.5, w: 11.7, h: 18.4 },
+  { id: "dog", href: "https://www.instagram.com/mikenjiyon", tip: "currently unavailable. very busy napping.", l: 4.5, t: 76, w: 14, h: 15 },
+  { id: "main", href: "https://github.com/jocelindarma", tip: "see what im cooking", l: 44.3, t: 38.7, w: 17.5, h: 16.2 },
+  { id: "rightscreen", href: "https://open.spotify.com/playlist/2AAnnbasMwi6uAFGbURoSp?si=C124D9-cQ9KXSyFNNQgsxQ", tip: "the current rotation", l: 62.8, t: 40.9, w: 13.8, h: 16.2 }
+];
+const DESK_NOTE_SLOT = { nl: 39, nt: 12, nw: 44 };
+const CODE_LINES = [[0, 52], [6, 34], [6, 66], [12, 28], [12, 48], [6, 24], [0, 14], [0, 44], [6, 58], [12, 38], [12, 20], [6, 50], [0, 30], [0, 62]].map(([indent, width], i) => ({ indent, width, op: i % 5 === 0 ? 1 : 0.6 }));
+const SIDE_LINES = [56, 44, 62, 38, 52, 34, 48];
+const YOURS_KEY = "jd-your-countries";
+const loadYours = () => { try { return JSON.parse(localStorage.getItem(YOURS_KEY) || "[]"); } catch (e) { return []; } };
+
+class Component extends DCLogic {
+  state = { page: "home", caseId: "meridia", ticket: "globe", yours: loadYours(), hoverName: "", deskHover: "", ...jakartaNow() };
+  rootRef = React.createRef();
+  deskRef = () => {};
+
+  go = (page, caseId) => {
+    if (page === "case" || page === "recruiter") { this.setState({ page, caseId: caseId || this.state.caseId }); window.scrollTo({ top: 0 }); return; }
+    const fromCase = this.state.page === "case" || this.state.page === "recruiter";
+    this.setState({ page }, () => this.scrollToSection(page, fromCase ? "auto" : "smooth"));
+  };
+  scrollToSection(page, behavior) {
+    const el = this.rootRef.current && this.rootRef.current.querySelector('[data-section="' + page + '"]');
+    if (!el) return;
+    this.spyLock = true;
+    const hh = (this.rootRef.current.querySelector("header") || {}).offsetHeight || 84;
+    const top = el.getBoundingClientRect().top + window.scrollY - hh;
+    window.scrollTo({ top: page === "home" ? 0 : top, behavior });
+    clearTimeout(this.spyT); this.spyT = setTimeout(() => { this.spyLock = false; }, behavior === "smooth" ? 900 : 100);
+  }
+  onScroll = () => {
+    if (this.spyRaf) return;
+    this.spyRaf = requestAnimationFrame(() => {
+      this.spyRaf = 0;
+      if (this.spyLock || this.state.page === "case" || this.state.page === "recruiter" || !this.rootRef.current) return;
+      const secs = [...this.rootRef.current.querySelectorAll("[data-section]")];
+      let cur = "home";
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+      if (atBottom) cur = "about";
+      else secs.forEach(s => { if (s.getBoundingClientRect().top <= 84 + window.innerHeight * 0.35) cur = s.getAttribute("data-section"); });
+      if (cur !== this.state.page) this.setState({ page: cur });
+    });
+  };
+
+  tear = () => {
+    if (this.state.ticket !== "ticket") return;
+    const el = this.rootRef.current;
+    const m = el && el.querySelector("[data-ticket-main]"), s = el && el.querySelector("[data-ticket-stub]");
+    if (m) m.style.animation = "jd-tear-main 0.8s cubic-bezier(0.4, 0, 0.6, 1) both";
+    if (s) s.style.animation = "jd-tear-stub 0.8s cubic-bezier(0.3, 0.6, 0.6, 1) both";
+    const btn = m && m.parentElement; if (btn) btn.style.animation = "none";
+    this.setState({ ticket: "tearing" });
+    setTimeout(() => this.setState({ ticket: "globe" }), 780);
+  };
+
+  // Real-geometry globe (Natural Earth via world-atlas), d3 orthographic, spun in a rAF loop.
+  globeRef = (svg) => {
+    this.globeSvg = svg;
+    if (this.globeRaf) cancelAnimationFrame(this.globeRaf);
+    this.globeRaf = 0;
+    if (svg) this.buildGlobe();
+  };
+  loadWorld() {
+    if (this.worldP) return this.worldP;
+    this.worldP = fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json").then(r => r.json()).then(t => {
+      this.world = topojson.feature(t, t.objects.countries).features;
+      this.buildGlobe();
+    }).catch(() => { this.world = []; });
+    return this.worldP;
+  }
+  buildGlobe() {
+    const svg = this.globeSvg;
+    if (!svg || !window.d3 || !this.world) return;
+    const NS = "http://www.w3.org/2000/svg", R = 150, CX = 200, CY = 200;
+    const mk = (t, a) => { const n = document.createElementNS(NS, t); for (const k in a) n.setAttribute(k, a[k]); return n; };
+    svg.innerHTML = "";
+    const proj = d3.geoOrthographic().scale(R).translate([CX, CY]).clipAngle(90);
+    const path = d3.geoPath(proj);
+    const back = mk("g", {}); svg.appendChild(back);
+    svg.appendChild(mk("circle", { cx: CX, cy: CY, r: R, fill: "#f4f7ff", stroke: "#1b2a4a", "stroke-width": 2 }));
+    const grat = mk("path", { fill: "none", stroke: "#1b2a4a", "stroke-opacity": 0.12, "stroke-width": 0.8 }); svg.appendChild(grat);
+    const graticule = d3.geoGraticule().step([30, 30])();
+    const mine = new Set(MY_COUNTRIES);
+    const land = this.world.map(f => { const p = mk("path", { stroke: "#1b2a4a", "stroke-width": 0.9, "stroke-linejoin": "round" }); svg.appendChild(p); return p; });
+    const pins = MY_PINS.map(() => { const c = mk("circle", { r: 4.5, fill: "#1b2a4a", stroke: "#ffffff", "stroke-width": 1.5, opacity: 0 }); svg.appendChild(c); return c; });
+    // "you are here" marker: Jakarta
+    const here = mk("g", { opacity: 0 });
+    here.appendChild(mk("circle", { r: 14, fill: "#2d5be3", "fill-opacity": 0.25, stroke: "none" })).style.animation = "jd-ping 1.8s ease-out infinite";
+    here.appendChild(mk("path", { d: "M0 0 C-9 -9 -9 -20 0 -20 C9 -20 9 -9 0 0 Z", fill: "#2d5be3", stroke: "#ffffff", "stroke-width": 1.6 }));
+    here.appendChild(mk("circle", { cy: -13, r: 3.2, fill: "#ffffff", stroke: "none" }));
+    const hereLabel = mk("text", { y: -28, "text-anchor": "middle", "font-family": "DM Mono, monospace", "font-size": 10, "letter-spacing": 1, fill: "#1b2a4a", stroke: "none" }); hereLabel.textContent = "JAKARTA · NOW"; here.appendChild(hereLabel);
+    svg.appendChild(here);
+    const front = mk("g", {}); svg.appendChild(front);
+    back.appendChild(mk("ellipse", { cx: CX, cy: CY, rx: 196, ry: 62, stroke: "#1b2a4a", "stroke-width": 1.2, "stroke-dasharray": "4 6", fill: "none", transform: "rotate(-18 " + CX + " " + CY + ")" }));
+    const plane = mk("path", { d: "M0 -7 L2.4 -1 L11 3 L11 5.5 L2.2 3.6 L1.4 8 L4 10 L4 11.5 L0 10.5 L-4 11.5 L-4 10 L-1.4 8 L-2.2 3.6 L-11 5.5 L-11 3 L-2.4 -1 Z", fill: "#1b2a4a", stroke: "#ffffff", "stroke-width": 1.2 });
+    const toR = Math.PI / 180;
+    let rot = -106.8, last = performance.now(), paused = false, odd = 0;
+    const toSvg = (e) => { const pt = new DOMPoint(e.clientX, e.clientY).matrixTransform(svg.getScreenCTM().inverse()); return [pt.x, pt.y]; };
+    const hit = (e) => {
+      const [x, y] = toSvg(e);
+      if (Math.hypot(x - CX, y - CY) > R) return null;
+      const ll = proj.invert([x, y]); if (!ll) return null;
+      return this.world.find(f => d3.geoContains(f, ll)) || null;
+    };
+    svg.style.cursor = "pointer";
+    svg.onmouseenter = () => { paused = true; };
+    svg.onmouseleave = () => { paused = false; if (this.state.hoverName) this.setState({ hoverName: "" }); };
+    svg.onmousemove = (e) => { const f = hit(e); const n = f ? f.properties.name : ""; if (n !== this.state.hoverName) this.setState({ hoverName: n }); };
+    svg.onclick = (e) => {
+      const f = hit(e); if (!f) return;
+      this.boink("pin");
+      const n = f.properties.name;
+      this.setState(s => { const yours = s.yours.includes(n) ? s.yours.filter(x => x !== n) : [...s.yours, n]; try { localStorage.setItem(YOURS_KEY, JSON.stringify(yours)); } catch (err) {} return { yours }; });
+    };
+    const frame = (now) => {
+      const dt = Math.min(0.05, (now - last) / 1000); last = now;
+      if (!paused) rot += dt * 12;
+      odd = (odd + 1) % 3;
+      if (odd === 0) {
+        proj.rotate([rot, -18]);
+        grat.setAttribute("d", path(graticule) || "");
+        const yours = new Set(this.state.yours), hover = this.state.hoverName;
+        this.world.forEach((f, i) => {
+          const n = f.properties.name, p = land[i];
+          p.setAttribute("d", path(f) || "");
+          p.setAttribute("fill", mine.has(n) ? "#1b2a4a" : yours.has(n) ? "#6c8fe0" : "#ffffff");
+          p.setAttribute("fill-opacity", hover && hover !== n ? "0.7" : "1");
+        });
+        { const vis = d3.geoDistance([106.8, -6.2], [-rot, 18]) < Math.PI / 2; here.setAttribute("opacity", vis ? "1" : "0"); if (vis) { const [x, y] = proj([106.8, -6.2]); here.setAttribute("transform", "translate(" + x.toFixed(1) + " " + y.toFixed(1) + ")"); } }
+        MY_PINS.forEach(([, lon, lat], i) => { const c = pins[i], vis = d3.geoDistance([lon, lat], [-rot, 18]) < Math.PI / 2; c.setAttribute("opacity", vis ? "1" : "0"); if (vis) { const [x, y] = proj([lon, lat]); c.setAttribute("cx", x.toFixed(1)); c.setAttribute("cy", y.toFixed(1)); } });
+      }
+      const a = (now / 1000) * 0.9, ang = -18 * toR;
+      const ox = 196 * Math.cos(a), oy = 62 * Math.sin(a);
+      const px = CX + ox * Math.cos(ang) - oy * Math.sin(ang), py = CY + ox * Math.sin(ang) + oy * Math.cos(ang);
+      const isFront = Math.sin(a) > 0;
+      const heading = Math.atan2(62 * Math.cos(a) * Math.cos(ang) + (-196 * Math.sin(a)) * Math.sin(ang), -196 * Math.sin(a) * Math.cos(ang) - 62 * Math.cos(a) * Math.sin(ang)) / toR + 90;
+      plane.setAttribute("transform", "translate(" + px.toFixed(1) + " " + py.toFixed(1) + ") rotate(" + heading.toFixed(1) + ") scale(" + (isFront ? 1.15 : 0.85) + ")");
+      plane.setAttribute("opacity", isFront ? "1" : "0.55");
+      if (plane.parentNode !== (isFront ? front : back)) (isFront ? front : back).appendChild(plane);
+      this.globeRaf = requestAnimationFrame(frame);
+    };
+    this.globeRaf = requestAnimationFrame(frame);
+  }
+
+
+  // Sticky-note drag: cards keep their default grid placement; offsets ride on the
+  // `translate` property so the tilt in `transform` survives, and persist per card.
+  initCardDrag() {
+    const KEY = "jd-card-offsets";
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) {}
+    const wire = () => {
+      const cards = document.querySelectorAll('[data-r="book-card"]');
+      if (!cards.length) return false;
+      cards.forEach((el, i) => {
+        if (el.__drag) return;
+        el.__drag = true;
+        const id = "c" + i;
+        let off = saved[id] || { x: 0, y: 0 };
+        const paint = () => { el.style.translate = off.x + "px " + off.y + "px"; };
+        paint();
+        el.style.touchAction = "none";
+        el.addEventListener("pointerdown", (e) => {
+          if (e.button !== 0) return;
+          const sx = e.clientX, sy = e.clientY, ox = off.x, oy = off.y;
+          let moved = false;
+          el.setPointerCapture(e.pointerId);
+          el.style.transition = "box-shadow 0.2s";
+          el.style.zIndex = "5";
+          const move = (ev) => {
+            const dx = ev.clientX - sx, dy = ev.clientY - sy;
+            if (!moved && Math.hypot(dx, dy) > 4) { moved = true; el.style.cursor = "grabbing"; }
+            if (!moved) return;
+            off = { x: ox + dx, y: oy + dy };
+            paint();
+          };
+          const up = () => {
+            el.removeEventListener("pointermove", move);
+            el.removeEventListener("pointerup", up);
+            el.style.transition = "";
+            el.style.cursor = "";
+            el.style.zIndex = "";
+            if (moved) {
+              saved[id] = off;
+              try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (err) {}
+              el.__suppressClick = true;
+              setTimeout(() => { el.__suppressClick = false; }, 350);
+            }
+          };
+          el.addEventListener("pointermove", move);
+          el.addEventListener("pointerup", up);
+        });
+        el.addEventListener("click", (e) => { if (el.__suppressClick) { e.preventDefault(); e.stopPropagation(); } }, true);
+      });
+      return true;
+    };
+    this.wireCards = wire;
+    if (!wire()) { const t = setInterval(() => { if (wire()) clearInterval(t); }, 120); setTimeout(() => clearInterval(t), 6000); }
+  }
+
+  syncNav() {
+    const el = this.rootRef.current;
+    if (!el) return;
+    const order = ["home", "work", "about"];
+    const active = this.state.page === "case" ? "work" : this.state.page === "recruiter" ? "" : this.state.page;
+    const ai = order.indexOf(active);
+    el.querySelectorAll("[data-stop]").forEach(b => {
+      const i = order.indexOf(b.getAttribute("data-stop"));
+      const on = i === ai;
+      const u = b.querySelector("[data-underline]");
+      if (u) u.style.opacity = on ? "1" : "0";
+      b.style.color = on ? "var(--on-ink)" : "var(--on-ink-2)";
+      b.style.fontWeight = on ? "500" : "400";
+    });
+    if (this.props.accentColor) el.style.setProperty("--accent", this.props.accentColor);
+    if (this.props.walkerSpeed) {
+      const w = el.querySelector("[style*='jd-walk']");
+      if (w) w.style.animationDuration = this.props.walkerSpeed + "s";
+    }
+  }
+
+  // Tiny synthesized UI sounds (no audio files). Created lazily on first click so autoplay rules are satisfied.
+  boink(kind) {
+    if (this.props.sounds === false) return;
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+      if (!this.ac) this.ac = new AC();
+      const ac = this.ac; if (ac.state === "suspended") ac.resume();
+      const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
+      const [f0, f1, dur, type] = kind === "pin" ? [880, 1320, 0.12, "sine"] : kind === "hover" ? [640, 820, 0.07, "sine"] : kind === "spot" ? [420, 180, 0.22, "triangle"] : [520, 380, 0.1, "sine"];
+      o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.18, t + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + dur + 0.02);
+    } catch (e) {}
+  }
+  onRootClick = (e) => {
+    const t = e.target;
+    if (t.closest("[data-globe]")) return; // globe handles its own (only on a country hit)
+    if (t.closest("[data-spot]")) return this.boink("click");
+  };
+
+  componentDidMount() {
+    this.syncNav();
+    this.initCardDrag();
+    if (this.rootRef.current) this.rootRef.current.addEventListener("click", this.onRootClick);
+    window.addEventListener("scroll", this.onScroll, { passive: true });
+    this.loadWorld();
+    this.tick = setInterval(() => this.setState(jakartaNow()), 15000);
+  }
+  componentDidUpdate() { this.syncNav(); if (this.wireCards) this.wireCards(); }
+  componentWillUnmount() { clearInterval(this.tick); if (this.rootRef.current) this.rootRef.current.removeEventListener("click", this.onRootClick); window.removeEventListener("scroll", this.onScroll); if (this.globeRaf) cancelAnimationFrame(this.globeRaf); }
+
+  renderVals() {
+    const p = this.state.page;
+    const c = CASES[this.state.caseId] || CASES.meridia;
+    return {
+      rootRef: this.rootRef,
+      today: this.state.today, clock: this.state.clock,
+      showTicket: this.state.ticket !== "globe", showGlobe: this.state.ticket === "globe",
+      tear: this.tear, resetTicket: () => this.setState({ ticket: "ticket" }),
+      globe: this.state.ticket === "globe" ? React.createElement("svg", { key: "globe", ref: this.globeRef, "data-globe": "", viewBox: "-10 40 420 320", style: { width: "100%", maxWidth: 480, height: "100%", display: "block", overflow: "visible" } }) : null,
+      yourCount: this.state.yours.length, hasYours: this.state.yours.length > 0,
+      clearYours: () => { try { localStorage.setItem(YOURS_KEY, "[]"); } catch (e) {} this.setState({ yours: [] }); },
+      globeHint: this.state.hoverName ? this.state.hoverName + (this.state.yours.includes(this.state.hoverName) ? " ✓" : "") : "hover to pause · click where you've been",
+      notCase: p !== "case" && p !== "recruiter", isCase: p === "case",
+      isRecruiter: p === "recruiter", notRecruiter: p !== "recruiter",
+      openRecruiter: () => this.go("recruiter"), exitRecruiter: () => this.go("home"),
+      resumeJobs: RESUME_JOBS, resumeSkills: RESUME_SKILLS,
+      deskRef: this.deskRef, codeLines: CODE_LINES, sideLines: SIDE_LINES,
+      deskSpots: DESK_SPOTS.map(s => {
+        const cx = s.l + s.w / 2, side = cx > 58 ? "right" : cx < 24 ? "left" : "center";
+        return { ...s, enter: () => { if (this.state.deskHover !== s.id && s.id !== "dog") this.boink("hover"); this.setState({ deskHover: s.id }); }, leave: () => this.setState({ deskHover: "" }) };
+      }),
+      deskNotes: DESK_SPOTS.filter(s => s.id === this.state.deskHover).map(s => ({ ...s, ...DESK_NOTE_SLOT })),
+      goHome: () => this.go("home"), goWork: () => this.go("work"), goAbout: () => this.go("about"),
+      toTop: () => this.go("home"),
+      openMeridia: () => this.go("case", "meridia"),
+      openDam: () => this.go("case", "dam"),
+      openBunny: () => this.go("case", "bunny"),
+      caseKicker: c.kicker, caseTitle: c.title, caseLede: c.lede, caseRole: c.role,
+      caseTime: c.time, caseStack: c.stack, caseSections: c.sections, caseShipped: c.shipped,
+      caseSectionsLabel: c.sectionsLabel || "WHAT I DID",
+      hasShipped: !!(c.shipped && c.shipped.length), hasHero: !c.live,
+      hasLive: !!c.live, caseLive: c.live || "", caseRepo: c.repo || "",
+      caseRepoLabel: c.repoLabel || "", caseCloser: c.closer || "",
+      caseSlotId: c.slot, caseSlotHint: c.slotHint, caseSlotSrc: c.slotSrc || ("./art/case-" + c.slot.replace("jd-case-", "") + ".svg"),
+      caseNextLabel: c.nextLabel, caseNext: () => this.go("case", c.next)
+    };
+  }
+}
+</script>
+</body>
+</html>
